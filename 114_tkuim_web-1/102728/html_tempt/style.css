@@ -1,0 +1,310 @@
+/* --- 1. 全域與色彩變數 --- */
+:root {
+    --primary-color: #007aff;
+    --primary-hover: #0056b3;
+    --card-bg: #ffffff;
+    --body-bg: #f7f8fc;
+    --text-color: #333;
+    --border-color: #e0e0e0;
+    --shadow-light: 0 4px 15px rgba(0, 0, 0, 0.06);
+    --shadow-dark: 0 6px 20px rgba(0, 0, 0, 0.1);
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background-color: var(--body-bg);
+    color: var(--text-color);
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    line-height: 1.6;
+}
+
+main {
+    flex: 1;
+    max-width: 900px;
+    width: 90%;
+    margin: 20px auto;
+}
+
+/* --- 2. Header & Footer --- */
+header {
+    text-align: center;
+    padding: 25px 20px;
+    background-image: linear-gradient(120deg, #4a90e2 0%, #005c97 100%);
+    color: white;
+    border-radius: 0 0 16px 16px;
+    box-shadow: var(--shadow-dark);
+}
+
+h1, h2 {
+    color: #2c3e50;
+}
+
+h2 {
+    text-align: center;
+    margin-top: 30px;
+}
+
+footer {
+    text-align: center;
+    padding: 20px;
+    background-color: #343a40;
+    color: #f8f9fa;
+    margin-top: 30px;
+}
+footer a {
+    color: #a0cfff;
+}
+
+/* --- 3. [!!] 表單 (已更新) --- */
+#search-form {
+    display: flex;
+    flex-wrap: wrap; /* RWD: 允許換行 */
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+#search-form label {
+    flex-basis: 100%; /* RWD: 標籤佔滿一行 */
+    font-weight: bold;
+}
+
+/* [!!] 新增：輸入框群組 (選單 + 輸入) */
+.input-group {
+    display: flex;
+    flex-grow: 1; /* RWD: 佔滿剩餘空間 */
+    gap: 0; /* 讓選單和輸入框貼合 */
+}
+
+/* [!!] 新增：語言選單樣式 */
+#language-select {
+    padding: 12px 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px 0 0 8px; /* 左側圓角 */
+    font-size: 1em;
+    background-color: #fdfdfd;
+    cursor: pointer;
+    border-right: none; /* 移除右側邊框 */
+}
+#language-select:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0,123,255,0.2);
+}
+
+#search-form input[type="text"] {
+    flex-grow: 1;
+    padding: 12px 15px;
+    border: 1px solid var(--border-color);
+    border-radius: 0 8px 8px 0; /* 右側圓角 */
+    font-size: 1em;
+    transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+/* [!!] 修正：當 focus 時，讓群組一起亮 */
+#search-form input[type="text"]:focus,
+#language-select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(0,123,255,0.2);
+    z-index: 2; /* 確保 focus 時陰影在最上層 */
+}
+/* 讓 input 的 focus 不要蓋掉 select */
+#search-form input[type="text"]:focus {
+    border-left: 1px solid var(--primary-color);
+    margin-left: -1px; /* 補償邊框 */
+}
+
+
+#search-form button {
+    padding: 12px 20px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+#search-form button:hover {
+    background-color: var(--primary-hover);
+    box-shadow: var(--shadow-light);
+}
+#search-form button:disabled {
+    background-color: #b0b0b0;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+/* --- 4. 資訊回饋 (錯誤/載入/容錯) --- */
+/* (以下樣式保持不變，均為正確) */
+#feedback-display {
+    text-align: center;
+    font-size: 1.1em;
+    padding: 10px;
+    border-radius: 8px;
+}
+.error {
+    color: #d9534f;
+    background-color: #f2dede;
+    border: 1px solid #ebccd1;
+}
+.suggestion-title {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+}
+.suggestion-button {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 8px;
+    font-size: 1em;
+    color: var(--primary-color);
+    background-color: #fff;
+    border: 1px solid var(--primary-color);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+.suggestion-button:hover {
+    background-color: var(--primary-color);
+    color: white;
+    box-shadow: var(--shadow-light);
+}
+
+/* --- 5. 天氣卡片 (UI) --- */
+/* (以下樣式保持不變，均為正確) */
+.weather-card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: var(--shadow-light);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    animation: fadeIn 0.5s ease-out;
+}
+.weather-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-dark);
+}
+#current-weather-container .weather-card {
+    background-image: linear-gradient(135deg, #e6f2ff 0%, #ffffff 100%);
+    max-width: 320px;
+    margin: 20px auto 0;
+}
+.weather-card h2 {
+    margin-top: 0;
+    font-size: 1.7em;
+}
+.weather-card .temp {
+    font-size: 3.5em;
+    font-weight: 300;
+    margin: 10px 0;
+    color: #005c97;
+}
+.weather-card .icon {
+    font-size: 5em;
+    line-height: 1;
+    margin: 10px 0;
+}
+#forecast-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 15px;
+}
+.forecast-card h3 {
+    margin-top: 0;
+    font-size: 1.1em;
+    color: var(--primary-color);
+}
+.forecast-card .icon {
+    font-size: 3em;
+}
+.forecast-card .temp-max {
+    font-weight: bold;
+}
+.forecast-card .temp-min {
+    color: #666;
+}
+
+/* 城市形象照 */
+#city-image-container {
+    width: 100%;
+    margin-bottom: 20px;
+}
+.city-image {
+    width: 100%;
+    height: 350px;
+    object-fit: cover;
+    border-radius: 12px;
+    box-shadow: var(--shadow-dark);
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* --- 6. 載入動畫 --- */
+/* (以下樣式保持不變，均為正確) */
+.spinner {
+    width: 18px;
+    height: 18px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: #ffffff;
+    animation: spin 1s ease-in-out infinite;
+}
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* --- 7. 版面 (RWD) --- */
+/* (以下樣式保持不變，均為正確) */
+.desktop-hr {
+    display: none;
+}
+@media (min-width: 768px) {
+    #weather-details {
+        display: grid;
+        grid-template-columns: 320px 1fr;
+        gap: 25px;
+        align-items: flex-start;
+    }
+    #current-weather-container {
+        margin: 0;
+    }
+    #forecast-wrapper {
+        border-left: 1px solid var(--border-color);
+        padding-left: 25px;
+    }
+    .desktop-hr {
+        display: none;
+    }
+    #forecast-wrapper h2 {
+        text-align: left;
+        margin-top: 0;
+    }
+}
+
+/* [!!] RWD 修正：讓手機版的表單按鈕換行 */
+@media (max-width: 480px) {
+    .input-group {
+        flex-basis: 100%; /* 讓選單+輸入框 佔滿一行 */
+    }
+    #search-form button {
+        flex-basis: 100%; /* 讓搜尋按鈕 佔滿一行 */
+    }
+}
