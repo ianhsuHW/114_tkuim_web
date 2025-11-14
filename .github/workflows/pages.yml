@@ -1,11 +1,9 @@
-﻿name: Deploy Pages (114_tkuim_web-1)
+﻿name: Deploy Pages
 
 on:
   push:
-    branches: [ main ]
-    paths:
-      - "114_tkuim_web-1/**"
-      - ".github/workflows/pages.yml"
+    branches: [ "main" ]
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -17,18 +15,24 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: 114_tkuim_web-1
+          path: .
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
