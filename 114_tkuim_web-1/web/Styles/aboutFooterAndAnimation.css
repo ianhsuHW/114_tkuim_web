@@ -1,0 +1,173 @@
+/* ==================== About Section ==================== */
+.about-section {
+    padding: 5rem 0;
+    background: white;
+}
+
+[data-theme="dark"] .about-section {
+    background: var(--card-bg);
+}
+
+.section-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    color: var(--dark-color);
+}
+
+[data-theme="dark"] .section-title {
+    color: var(--text-color);
+}
+
+.section-description {
+    font-size: 1.2rem;
+    color: #7f8c8d;
+    line-height: 1.8;
+}
+
+[data-theme="dark"] .section-description {
+    color: var(--text-secondary);
+}
+
+.feature-icon {
+    font-size: 3rem;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+.features h4 {
+    font-weight: 600;
+    margin: 1rem 0 0.5rem;
+}
+
+[data-theme="dark"] .features h4 {
+    color: var(--text-color);
+}
+
+.features p {
+    color: #7f8c8d;
+}
+
+[data-theme="dark"] .features p {
+    color: var(--text-secondary);
+}
+
+/* ==================== Footer ==================== */
+.footer {
+    background: var(--dark-color);
+    color: white;
+    padding: 2rem 0;
+    margin-top: 3rem;
+}
+
+[data-theme="dark"] .footer {
+    background: #000000;
+    color: #e8e8e8;
+}
+
+.footer p {
+    margin: 0.5rem 0;
+}
+
+/* ==================== 深色模式切換按鈕 ==================== */
+#darkModeToggle {
+    transition: all 0.3s ease;
+    border: none;
+    padding: 0.5rem;
+}
+
+[data-theme="dark"] #darkModeToggle {
+    color: #ffd93d !important;
+}
+
+#darkModeToggle:hover {
+    transform: rotate(20deg) scale(1.1);
+}
+
+/* ==================== 滾動條樣式 ==================== */
+[data-theme="dark"] ::-webkit-scrollbar {
+    width: 10px;
+    background: #1a1a2e;
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-thumb {
+    background: #4A90E2;
+    border-radius: 5px;
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
+    background: #5BA3F5;
+}
+
+/* ==================== 動畫效果 ==================== */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+@keyframes shake {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    25% {
+        transform: translateX(-10px);
+    }
+    75% {
+        transform: translateX(10px);
+    }
+}
+
+@keyframes windBlow {
+    0%, 100% {
+        transform: translateX(0) rotate(0deg);
+    }
+    25% {
+        transform: translateX(5px) rotate(5deg);
+    }
+    75% {
+        transform: translateX(-5px) rotate(-5deg);
+    }
+}
+
+.animate-fade-in {
+    animation: fadeIn 1s ease;
+}
+
+.animate-slide-up {
+    animation: slideIn 0.8s ease;
+}
