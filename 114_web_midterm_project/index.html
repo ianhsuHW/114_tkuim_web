@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="即時城市天氣查詢系統">
+    <title>城市天氣查詢系統</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="Styles/globalVarible.css">
+    <link rel="stylesheet" href="Styles/headerAndHero.css">
+    <link rel="stylesheet" href="Styles/weatherAnimationAndBar.css">
+    <link rel="stylesheet" href="Styles/recommandAndSearch.css">
+    <link rel="stylesheet" href="Styles/weatherAndMap.css">
+    <link rel="stylesheet" href="Styles/forecast.css">
+    <link rel="stylesheet" href="Styles/aqi.css">
+    <link rel="stylesheet" href="Styles/aboutFooterAndAnimation.css">
+    <link rel="stylesheet" href="Styles/feedback.css">
+    <link rel="stylesheet" href="Styles/rwd.css">
+</head>
+<body>
+    <!-- Header Section -->
+    <header class="header-section">
+        <nav class="navbar navbar-expand-lg navbar-dark">
+            <div class="container">
+                <a class="navbar-brand" href="#">
+                    <i class="fas fa-cloud-sun"></i> 天氣查詢
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#home">首頁</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#about">關於</a>
+                        </li>
+                        <!-- 深色模式按鈕 -->
+                        <li class="nav-item">
+                            <button class="btn btn-link nav-link" id="darkModeToggle" title="切換深色模式">
+                                <i class="fas fa-moon"></i>
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Hero Section -->
+        <section id="home" class="hero-section">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-8">
+                        <div class="hero-content text-center">
+                            <h1 class="display-4 mb-4 animate-fade-in">即時天氣資訊</h1>
+                            <p class="lead mb-5 animate-fade-in">輸入城市名稱，立即取得詳細天氣狀況</p>
+
+                            <!-- Search Form -->
+                            <form id="weatherForm" class="weather-form animate-slide-up" novalidate>
+                                <div class="input-group input-group-lg mb-3">
+                                    <input
+                                        type="text"
+                                        id="cityInput"
+                                        class="form-control"
+                                        placeholder="請輸入城市名稱（e.g. Taipei, Tokyo, London）"
+                                        required
+                                        minlength="2"
+                                        aria-label="城市名稱"
+                                    >
+                                    <button class="btn btn-primary" type="submit">
+                                        <i class="fas fa-search"></i> 查詢
+                                    </button>
+                                </div>
+                                <div class="invalid-feedback" id="errorMessage"></div>
+                            </form>
+                            <!-- 常見城市範例 -->
+                            <div class="city-examples mt-2" style="display: none;" id="cityExamples">
+                                <small class="text-muted d-block mb-1">
+                                    <i class="fas fa-lightbulb"></i> 常見城市英文名稱：
+                                </small>
+                                <div class="example-tags">
+                                    <span class="example-tag">台北 → Taipei</span>
+                                    <span class="example-tag">東京 → Tokyo</span>
+                                    <span class="example-tag">首爾 → Seoul</span>
+                                    <span class="example-tag">北京 → Beijing</span>
+                                    <span class="example-tag">上海 → Shanghai</span>
+                                </div>
+                            </div>
+                            <!-- 搜尋歷史（置中版）-->
+                            <div class="search-history mt-4" id="searchHistorySection" style="display: none;">
+                                <div class="text-center mb-3">
+                                    <h5 class="history-title mb-2">
+                                        <i class="fas fa-history"></i> 最近搜尋
+                                    </h5>
+                                </div>
+                                <div id="searchHistory" class="history-tags"></div>
+                                <div class="text-center mt-3">
+                                    <button class="btn btn-sm btn-outline-danger" id="clearHistoryBtn">
+                                        <i class="fas fa-trash-alt"></i> 清除記錄
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- 🆕 收藏城市（置中版）-->
+                            <div class="favorites-section mt-4" id="favoritesSection" style="display: none;">
+                                <div class="text-center mb-3">
+                                    <h5 class="favorites-title mb-2">
+                                        <i class="fas fa-star"></i> 收藏城市
+                                    </h5>
+                                </div>
+                                <div id="favoritesList" class="history-tags"></div>
+                                <div class="text-center mt-3">
+                                    <button class="btn btn-sm btn-outline-warning" id="clearFavoritesBtn">
+                                        <i class="fas fa-star"></i> 清空收藏
+                                    </button>
+                                </div>
+                            </div>
+                            <button id="locate-btn" class="btn btn-info mt-3">
+                                        <i class="fas fa-location-arrow"></i> 使用我的位置查天氣
+                                        </button>
+                            <!-- 熱門城市選擇-->
+                            <div class="quick-cities-section mt-4">
+                                <h6 class="quick-cities-title text-center mb-3">
+                                    <i class="fas fa-map-marker-alt"></i> 熱門城市快速查詢
+                                </h6>
+                                <div class="quick-cities">
+                                    <!-- 台灣城市 -->
+                                    <div class="city-category">
+                                        <span class="category-label">🏝️台灣</span>
+                                        <button class="btn quick-city-btn" data-city="Taipei">台北</button>
+                                        <button class="btn quick-city-btn" data-city="New Taipei">新北</button>
+                                        <button class="btn quick-city-btn" data-city="Taoyuan">桃園</button>
+                                        <button class="btn quick-city-btn" data-city="Hsinchu">新竹 ( 我老鄉 )</button>
+                                        <button class="btn quick-city-btn" data-city="Taichung">台中 ( 許大哥老鄉 )</button>
+                                        <button class="btn quick-city-btn" data-city="Tainan">台南</button>
+                                        <button class="btn quick-city-btn" data-city="Kaohsiung">高雄</button>
+                                    </div>
+
+                                    <!-- 亞洲城市 -->
+                                    <div class="city-category">
+                                        <span class="category-label">🌏 亞洲</span>
+                                        <button class="btn quick-city-btn" data-city="Tokyo">東京</button>
+                                        <button class="btn quick-city-btn" data-city="Seoul">首爾</button>
+                                        <button class="btn quick-city-btn" data-city="Beijing">北京</button>
+                                        <button class="btn quick-city-btn" data-city="Hong Kong">香港</button>
+                                        <button class="btn quick-city-btn" data-city="Singapore">新加坡</button>
+                                        <button class="btn quick-city-btn" data-city="Bangkok">曼谷</button>
+                                        <button class="btn quick-city-btn" data-city="Hanoi">河內</button>
+                                    </div>
+
+                                    <!-- 歐美城市 -->
+                                    <div class="city-category">
+                                        <span class="category-label">🌍 歐美</span>
+                                        <button class="btn quick-city-btn" data-city="London">倫敦</button>
+                                        <button class="btn quick-city-btn" data-city="Paris">巴黎</button>
+                                        <button class="btn quick-city-btn" data-city="New York">紐約</button>
+                                    </div>
+
+                                    <div class="city-category">
+                                        <span class="category-label">🌍 同場加映</span>
+                                        <button class="btn quick-city-btn" data-city="Sihanoukville">電詐園區</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Weather Display Section -->
+        <section id="weatherDisplay" class="weather-display-section d-none">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-10">
+                        <!-- Main Weather Card -->
+                        <article class="weather-card">
+                            <!-- 功能控制列 -->
+                            <div class="weather-controls">
+                                <div class="unit-toggle">
+                                    <button class="btn btn-sm btn-outline-primary active" id="celsiusBtn" data-unit="celsius">°C</button>
+                                    <button class="btn btn-sm btn-outline-primary" id="fahrenheitBtn" data-unit="fahrenheit">°F</button>
+                                </div>
+                                <div class="control-buttons">
+                                    <button class="btn btn-sm btn-outline-warning" id="favoriteBtn" title="加入收藏">
+                                        <i class="far fa-star"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-info" id="shareBtn" title="分享天氣">
+                                        <i class="fas fa-share-alt"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="row align-items-center">
+                                <div class="col-md-6">
+                                    <div class="weather-main">
+                                        <h2 id="cityName" class="city-name"></h2>
+                                        <div class="weather-icon-container">
+                                            <img id="weatherIcon" src="" alt="天氣圖示" class="weather-icon">
+                                        </div>
+                                        <div class="temperature-display">
+                                            <span id="temperature" class="temperature"></span>
+                                            <span class="unit">°C</span>
+                                        </div>
+                                        <p id="weatherDescription" class="weather-description"></p>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="weather-details">
+                                        <h3 class="details-title">詳細資訊</h3>
+                                        <div class="detail-item">
+                                            <i class="fas fa-temperature-high"></i>
+                                            <span class="detail-label">體感溫度：</span>
+                                            <span id="feelsLike" class="detail-value"></span>
+                                        </div>
+                                        <div class="detail-item">
+                                            <i class="fas fa-tint"></i>
+                                            <span class="detail-label">濕度：</span>
+                                            <span id="humidity" class="detail-value"></span>
+                                        </div>
+                                        <div class="detail-item">
+                                            <i class="fas fa-wind"></i>
+                                            <span class="detail-label">風速：</span>
+                                            <span id="windSpeed" class="detail-value"></span>
+                                        </div>
+                                        <div class="detail-item">
+                                            <i class="fas fa-compress-arrows-alt"></i>
+                                            <span class="detail-label">氣壓：</span>
+                                            <span id="pressure" class="detail-value"></span>
+                                        </div>
+                                        <div class="detail-item">
+                                            <i class="fas fa-eye"></i>
+                                            <span class="detail-label">能見度：</span>
+                                            <span id="visibility" class="detail-value"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                        <div class="forecast-container">
+                            <h3 class="forecast-title">
+                                <i class="fas fa-calendar-week"></i> 五日預報
+                            </h3>
+                            <div class="forecast-cards" id="forecastCards">
+                                <p style="text-align: center; color: #888; grid-column: 1/-1;">載入中...</p>
+                            </div>
+                            <div id="forecastChartContainer" style="max-width:40px; width:100%; margin:0 auto;">
+                                <canvas id="forecastChart"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- 空氣品質指數 -->
+                        <div class="aqi-container">
+                            <h3 class="aqi-title">
+                                <i class="fas fa-wind"></i> 空氣品質指數
+                            </h3>
+                            <div class="aqi-content">
+                                <!-- 主要 AQI 顯示 -->
+                                <div class="aqi-main-card">
+                                    <div class="aqi-circle" id="aqiCircle">
+                                        <svg class="aqi-progress" width="200" height="200">
+                                            <circle class="aqi-progress-bg" cx="100" cy="100" r="85"></circle>
+                                            <circle class="aqi-progress-bar" id="aqiProgressBar" cx="100" cy="100" r="85"></circle>
+                                        </svg>
+                                        <div class="aqi-value-wrapper">
+                                            <div class="aqi-value" id="aqiValue">--</div>
+                                            <div class="aqi-label">AQI</div>
+                                        </div>
+                                    </div>
+                                    <div class="aqi-status" id="aqiStatus">載入中</div>
+                                    <div class="aqi-description" id="aqiDescription">正在取得空氣品質資訊...</div>
+                                </div>
+
+                                <!-- 污染物詳細資訊 -->
+                                <div class="aqi-pollutants">
+                                    <div class="pollutant-card" id="pm25Card">
+                                        <div class="pollutant-icon">
+                                            <i class="fas fa-smog"></i>
+                                        </div>
+                                        <div class="pollutant-info">
+                                            <div class="pollutant-name">PM2.5</div>
+                                            <div class="pollutant-value" id="pm25">-- μg/m³</div>
+                                            <div class="pollutant-bar">
+                                                <div class="pollutant-bar-fill" id="pm25Bar"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="pollutant-card" id="pm10Card">
+                                        <div class="pollutant-icon">
+                                            <i class="fas fa-cloud"></i>
+                                        </div>
+                                        <div class="pollutant-info">
+                                            <div class="pollutant-name">PM10</div>
+                                            <div class="pollutant-value" id="pm10">-- μg/m³</div>
+                                            <div class="pollutant-bar">
+                                                <div class="pollutant-bar-fill" id="pm10Bar"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="pollutant-card" id="o3Card">
+                                        <div class="pollutant-icon">
+                                            <i class="fas fa-sun"></i>
+                                        </div>
+                                        <div class="pollutant-info">
+                                            <div class="pollutant-name">O₃ 臭氧</div>
+                                            <div class="pollutant-value" id="o3">-- μg/m³</div>
+                                            <div class="pollutant-bar">
+                                                <div class="pollutant-bar-fill" id="o3Bar"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="pollutant-card" id="no2Card">
+                                        <div class="pollutant-icon">
+                                            <i class="fas fa-industry"></i>
+                                        </div>
+                                        <div class="pollutant-info">
+                                            <div class="pollutant-name">NO₂</div>
+                                            <div class="pollutant-value" id="no2">-- μg/m³</div>
+                                            <div class="pollutant-bar">
+                                                <div class="pollutant-bar-fill" id="no2Bar"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="pollutant-card" id="so2Card">
+                                        <div class="pollutant-icon">
+                                            <i class="fas fa-fire"></i>
+                                        </div>
+                                        <div class="pollutant-info">
+                                            <div class="pollutant-name">SO₂</div>
+                                            <div class="pollutant-value" id="so2">-- μg/m³</div>
+                                            <div class="pollutant-bar">
+                                                <div class="pollutant-bar-fill" id="so2Bar"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="pollutant-card" id="coCard">
+                                        <div class="pollutant-icon">
+                                            <i class="fas fa-car"></i>
+                                        </div>
+                                        <div class="pollutant-info">
+                                            <div class="pollutant-name">CO</div>
+                                            <div class="pollutant-value" id="co">-- mg/m³</div>
+                                            <div class="pollutant-bar">
+                                                <div class="pollutant-bar-fill" id="coBar"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Google 衛星地圖 -->
+                        <div class="map-container">
+                            <h3 class="map-title">
+                                <i class="fas fa-map-marked-alt"></i> 城市位置
+                            </h3>
+                            <div class="map-wrapper">
+                                <iframe
+                                    id="googleMap"
+                                    width="100%"
+                                    height="450"
+                                    style="border:0; border-radius: 15px;"
+                                    loading="lazy"
+                                    allowfullscreen
+                                    referrerpolicy="no-referrer-when-downgrade">
+                                </iframe>
+                            </div>
+                        </div>
+
+                        <!-- Additional Info -->
+                        <div class="row mt-4">
+                            <div class="col-md-4">
+                                <div class="info-card">
+                                    <i class="fas fa-sunrise info-icon"></i>
+                                    <h4>日出時間</h4>
+                                    <p id="sunrise"></p>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="info-card">
+                                    <i class="fas fa-sunset info-icon"></i>
+                                    <h4>日落時間</h4>
+                                    <p id="sunset"></p>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="info-card">
+                                    <i class="fas fa-cloud info-icon"></i>
+                                    <h4>雲量</h4>
+                                    <p id="clouds"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Loading Spinner -->
+        <div id="loadingSpinner" class="loading-spinner d-none">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">載入中...</span>
+            </div>
+            <p class="mt-3">正在取得天氣資訊...</p>
+        </div>
+
+        <!-- About Section -->
+        <section id="about" class="about-section">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-8 text-center">
+                        <h2 class="section-title">關於本系統</h2>
+                        <p class="section-description">
+                            本天氣查詢系統使用 OpenWeatherMap API 提供即時天氣資訊，
+                            支援全球主要城市查詢，讓您隨時掌握最新天氣狀況。
+                        </p>
+                        <div class="features mt-5">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <i class="fas fa-bolt feature-icon"></i>
+                                    <h4>即時更新</h4>
+                                    <p>提供最新的天氣數據</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <i class="fas fa-mobile-alt feature-icon"></i>
+                                    <h4>響應式設計</h4>
+                                    <p>支援各種裝置瀏覽</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <i class="fas fa-globe feature-icon"></i>
+                                    <h4>全球覆蓋</h4>
+                                    <p>支援世界各地城市</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- 意見調查表單 -->
+        <section class="feedback-section" id="feedback">
+            <div class="container">
+                <div class="feedback-container">
+                    <div class="feedback-header">
+                        <h2 class="feedback-title">
+                            <i class="fas fa-comment-dots"></i> 意見回饋
+                        </h2>
+                        <p class="feedback-subtitle">您的寶貴意見是我們進步的動力！</p>
+                    </div>
+
+                    <form id="feedbackForm" class="feedback-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="userName">
+                                    <i class="fas fa-user"></i> 姓名 <span class="optional">(選填)</span>
+                                </label>
+                                <input
+                                    type="text"
+                                    id="userName"
+                                    name="userName"
+                                    class="form-input"
+                                    placeholder="請輸入您的姓名"
+                                >
+                            </div>
+
+                            <div class="form-group">
+                                <label for="userEmail">
+                                    <i class="fas fa-envelope"></i> Email <span class="optional">(選填)</span>
+                                </label>
+                                <input
+                                    type="email"
+                                    id="userEmail"
+                                    name="userEmail"
+                                    class="form-input"
+                                    placeholder="example@email.com"
+                                    pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+                                >
+                                <small class="form-hint" id="emailHint" style="display: none; color: #e74c3c;">
+                                    <i class="fas fa-exclamation-circle"></i> 請輸入有效的 Email 格式
+                                </small>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="feedbackType">
+                                <i class="fas fa-tag"></i> 意見類型 <span class="required">*</span>
+                            </label>
+                            <select id="feedbackType" name="feedbackType" class="form-select" required>
+                                <option value="">請選擇意見類型</option>
+                                <option value="功能建議">💡 功能建議</option>
+                                <option value="問題回報">🐛 問題回報</option>
+                                <option value="使用體驗">⭐ 使用體驗</option>
+                                <option value="其他">💬 其他</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="rating">
+                                <i class="fas fa-star"></i> 整體評分 <span class="required">*</span>
+                            </label>
+                            <div class="rating-container">
+                                <div class="star-rating" id="starRating">
+                                    <i class="far fa-star" data-rating="1"></i>
+                                    <i class="far fa-star" data-rating="2"></i>
+                                    <i class="far fa-star" data-rating="3"></i>
+                                    <i class="far fa-star" data-rating="4"></i>
+                                    <i class="far fa-star" data-rating="5"></i>
+                                </div>
+                                <span class="rating-text" id="ratingText">請選擇評分</span>
+                            </div>
+                            <input type="hidden" id="rating" name="rating" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="feedbackMessage">
+                                <i class="fas fa-comment"></i> 詳細意見 <span class="required">*</span>
+                            </label>
+                            <textarea
+                                id="feedbackMessage"
+                                name="feedbackMessage"
+                                class="form-textarea"
+                                placeholder="請告訴我們您的想法或建議..."
+                                rows="6"
+                                required
+                            ></textarea>
+                            <small class="char-count">
+                                <span id="charCount">0</span> / 500 字
+                            </small>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="reset" class="btn-reset">
+                                <i class="fas fa-redo"></i> 清除
+                            </button>
+                            <button type="submit" class="btn-submit">
+                                <i class="fas fa-paper-plane"></i> 送出意見
+                            </button>
+                        </div>
+
+                        <div class="feedback-success" id="feedbackSuccess" style="display: none;">
+                            <i class="fas fa-check-circle"></i>
+                            <p>感謝您的寶貴意見！我們會仔細閱讀並持續改進。</p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container text-center">
+            <p>&copy; 2025 城市天氣查詢系統. Powered by OpenWeatherMap API</p>
+            <p class="small">Built by 張傢寧 ( Kevin Chang ) and 許方彥 ( Ian Hsu ) in Tamkang University on 2025/11/10</p>
+            <p class="small">Built with HTML5, CSS3, Bootstrap 5 & JavaScript</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script src="script.js"></script>
+    <!-- 折線圖 JS -->
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</body>
+</html>

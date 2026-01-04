@@ -1,0 +1,441 @@
+/* 結構
+全域變數和重置
+Header
+Hero 區塊
+天氣動畫
+搜尋表單
+天氣顯示
+地圖
+五日預報
+AQI
+Loading & About
+Footer
+動畫
+響應式（統一在最後）
+*/
+/* ==================== 五日預報 ==================== */
+.forecast-container {
+    background: white;
+    border-radius: 20px;
+    padding: 2rem;
+    margin: 2rem 0;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+    animation: slideIn 0.5s ease;
+}
+
+[data-theme="dark"] .forecast-container {
+    background: var(--card-bg);
+}
+
+.forecast-title {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: var(--dark-color);
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 3px solid var(--primary-color);
+}
+
+[data-theme="dark"] .forecast-title {
+    color: var(--text-color);
+}
+
+.forecast-title i {
+    color: var(--primary-color);
+    margin-right: 0.5rem;
+}
+
+.forecast-cards {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1.2rem;
+}
+
+/* 卡片樣式（可點擊）*/
+.forecast-card {
+    background: white;
+    border-radius: 15px;
+    padding: 1.5rem 1rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border: 2px solid transparent;
+}
+
+[data-theme="dark"] .forecast-card {
+    background: #16213e;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+
+.forecast-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 12px 24px rgba(74, 144, 226, 0.3);
+    border-color: var(--primary-color);
+}
+
+.forecast-card:hover::after {
+    opacity: 1;
+}
+
+.forecast-card:active {
+    transform: translateY(-5px) scale(1);
+}
+
+.forecast-date {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 0.8rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #ecf0f1;
+}
+
+[data-theme="dark"] .forecast-date {
+    color: #e8e8e8;
+    border-bottom-color: #2d4059;
+}
+
+.forecast-icon {
+    width: 70px;
+    height: 70px;
+    margin: 0.5rem auto;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+    transition: transform 0.3s ease;
+}
+
+.forecast-card:hover .forecast-icon {
+    transform: scale(1.15) rotate(5deg);
+}
+
+.forecast-temp {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin: 0.8rem 0 0.3rem;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.forecast-temp-range {
+    font-size: 0.9rem;
+    color: #7f8c8d;
+    margin: 0.3rem 0;
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+[data-theme="dark"] .forecast-temp-range {
+    color: #a0a0a0;
+}
+
+.forecast-temp-range .temp-high {
+    color: #e74c3c;
+    font-weight: 600;
+}
+
+.forecast-temp-range .temp-low {
+    color: #3498db;
+    font-weight: 600;
+}
+
+.forecast-desc {
+    font-size: 0.95rem;
+    color: #7f8c8d;
+    text-transform: capitalize;
+    margin-top: 0.5rem;
+    line-height: 1.3;
+    min-height: 2.6rem;
+}
+
+.forecast-extra {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 0.8rem;
+    padding-top: 0.8rem;
+    border-top: 1px solid #ecf0f1;
+    font-size: 0.85rem;
+}
+
+[data-theme="dark"] .forecast-extra {
+    border-top-color: #2d4059;
+}
+
+.forecast-extra-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.2rem;
+}
+
+.forecast-extra-item i {
+    color: var(--primary-color);
+    font-size: 1rem;
+}
+
+/* 彈窗預設隱藏 */
+.forecast-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(5px);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none; /* 隱藏時不能點擊 */
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+/* 顯示狀態 */
+.forecast-modal.show {
+    opacity: 1;
+    visibility: visible;
+    display: flex;
+    pointer-events: auto; /* 顯示時可以點擊 */
+}
+
+.forecast-modal-content {
+    background: white;
+    border-radius: 25px;
+    max-width: 90vw;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.6);
+    transform: scale(0.9) translateY(20px);
+    transition: transform 0.3s ease;
+    position: relative;
+    padding: 1.5rem 1.2rem; /* 內邊距適中 */
+    word-wrap: break-word; /* 自動換行 */
+    overflow-wrap: break-word;
+    box-sizing: border-box;
+}
+
+[data-theme="dark"] .forecast-modal-content {
+    background: #1a1a2e;
+}
+
+.forecast-modal.show .forecast-modal-content {
+    transform: scale(1) translateY(0);
+}
+
+/* 關閉按鈕 */
+.modal-close-btn {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.1);
+    border: none;
+    color: #555;
+    font-size: 1.4rem;
+    cursor: pointer;
+    z-index: 10;
+    transition: all 0.3s ease;
+}
+
+.modal-close-btn:hover {
+    background: rgba(231, 76, 60, 0.9);
+    color: white;
+    transform: rotate(90deg) scale(1.1);
+}
+
+[data-theme="dark"] .modal-close-btn {
+    background: rgba(255, 255, 255, 0.1);
+    color: #bbb;
+}
+
+
+.modal-header {
+    text-align: center;
+    padding: 2.5rem 2rem 1.5rem;
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    border-radius: 25px 25px 0 0;
+}
+
+.modal-date {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: white;
+    margin: 0 0 1.5rem;
+}
+
+.modal-icon {
+    width: 130px;
+    height: 130px;
+    filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.4));
+}
+
+.modal-temp-section {
+    text-align: center;
+    padding: 2.5rem 2rem;
+    background: linear-gradient(180deg, var(--primary-color) 0%, transparent 100%);
+}
+
+.modal-temp-main {
+    font-size: 4.5rem;
+    font-weight: 700;
+    color: white;
+    text-shadow: 0 3px 10px rgba(0, 0, 0, 0.4);
+}
+
+.modal-feels-like {
+    font-size: 1.2rem;
+    color: rgba(255, 255, 255, 0.95);
+    margin: 0.8rem 0;
+}
+
+.modal-desc {
+    font-size: 1.4rem;
+    color: white;
+    text-transform: capitalize;
+    margin-top: 0.8rem;
+    font-weight: 500;
+}
+
+.modal-temp-range {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    padding: 2rem;
+    background: white;
+}
+
+[data-theme="dark"] .modal-temp-range {
+    background: #16213e;
+}
+
+.modal-temp-item {
+    text-align: center;
+    padding: 1.5rem;
+    border-radius: 15px;
+    background: rgba(0, 0, 0, 0.03);
+    transition: all 0.3s ease;
+}
+
+[data-theme="dark"] .modal-temp-item {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.modal-temp-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.modal-temp-item.high {
+    border: 3px solid #e74c3c;
+}
+
+.modal-temp-item.low {
+    border: 3px solid #3498db;
+}
+
+.modal-temp-item i {
+    font-size: 1.8rem;
+    margin-bottom: 0.8rem;
+}
+
+.modal-temp-item.high i {
+    color: #e74c3c;
+}
+
+.modal-temp-item.low i {
+    color: #3498db;
+}
+
+.modal-temp-item span {
+    display: block;
+    font-size: 1rem;
+    color: #7f8c8d;
+    margin-bottom: 0.5rem;
+}
+
+.modal-temp-item strong {
+    display: block;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #2c3e50;
+}
+
+[data-theme="dark"] .modal-temp-item strong {
+    color: #e8e8e8;
+}
+
+.modal-details {
+    padding: 2rem;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.2rem;
+    background: white;
+    border-radius: 0 0 25px 25px;
+}
+
+[data-theme="dark"] .modal-details {
+    background: #1a1a2e;
+}
+
+.modal-detail-item {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1.5rem;
+    background: rgba(74, 144, 226, 0.05);
+    border-radius: 15px;
+    transition: all 0.3s ease;
+}
+
+.modal-detail-item:hover {
+    background: rgba(74, 144, 226, 0.1);
+    transform: translateX(8px);
+}
+
+[data-theme="dark"] .modal-detail-item {
+    background: rgba(91, 163, 245, 0.08);
+}
+
+.modal-detail-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 15px;
+    background: var(--primary-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.modal-detail-icon i {
+    font-size: 1.8rem;
+    color: white;
+}
+
+.modal-detail-info {
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-detail-info span {
+    font-size: 1.1rem;
+    color: #7f8c8d;
+    font-weight: 500;
+}
+
+.modal-detail-info strong {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #2c3e50;
+}
+
+[data-theme="dark"] .modal-detail-info strong {
+    color: #e8e8e8;
+}

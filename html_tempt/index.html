@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Quantum Synthesizer</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<style type="text/tailwindcss">
+    :root {
+      --bg-dark: #08080c;
+      --card-dark: #121218;
+      --text-light: #e0e0e0;
+      --text-accent: #00e6ff;--text-highlight: #39ff14;--border-glow: #00e6ff;
+      --button-bg: #00aaff;
+      --button-hover: #00c0ff;
+      --input-border: #005f7a;
+      --input-focus: #00e6ff;
+      --placeholder: #7c889a;
+      --output-bg: #0d0d10;
+      --output-border: #39ff14;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+      font-family: 'Orbitron', sans-serif;background-color: var(--bg-dark);
+      color: var(--text-light);
+      position: relative;
+      overflow-x: hidden;
+      overflow-y: auto;}body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background:
+        radial-gradient(circle at 10% 20%, rgba(0,230,255,0.05) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(57,255,20,0.05) 0%, transparent 40%),
+        linear-gradient(45deg, rgba(0,230,255,0.02) 1px, transparent 1px) 0 0 / 20px 20px,
+        linear-gradient(-45deg, rgba(57,255,20,0.02) 1px, transparent 1px) 0 0 / 20px 20px;
+      z-index: -1;
+      pointer-events: none;
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    .loader {
+      width: 20px;
+      height: 20px;
+      border: 2px solid #FFF;
+      border-bottom-color: transparent;
+      border-radius: 50%;
+      display: inline-block;
+      box-sizing: border-box;
+      animation: rotation 1s linear infinite;
+    }
+    @keyframes rotation {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+  </style>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "var(--button-bg)",
+            "background-light": "var(--bg-dark)","card-light": "var(--card-dark)","text-primary-light": "var(--text-light)","text-secondary-light": "var(--placeholder)","border-light": "var(--input-border)","accent-blue": "var(--text-accent)",
+            "accent-green": "var(--text-highlight)",
+          },
+          fontFamily: {
+            "display": ["Orbitron", "sans-serif"]
+          },
+          borderRadius: {
+            "DEFAULT": "8px",
+            "lg": "16px",
+            "xl": "20px",
+            "full": "9999px"
+          },
+        },
+      },
+    }
+  </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-bg-dark font-display text-text-light">
+<div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+<header class="flex items-center p-4 bg-card-dark sticky top-0 z-20 border-b border-accent-blue/30 shadow-lg shadow-accent-blue/10">
+<button class="flex items-center justify-center rounded-full h-10 w-10 text-text-accent hover:bg-accent-blue/20 transition-colors">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<h1 class="text-accent-blue text-xl font-medium leading-tight flex-1 text-center pr-10 tracking-wide uppercase">Quantum Synthesizer</h1>
+</header>
+<main class="flex-grow p-4 grid gap-6 md:grid-cols-2 lg:grid-cols-3 relative">
+<div class="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
+<div class="w-4/5 h-4/5 md:w-3/5 md:h-3/5 lg:w-2/5 lg:h-2/5 bg-gradient-to-br from-accent-blue/10 to-accent-green/10 rounded-full flex items-center justify-center opacity-70 blur-3xl animate-pulse">
+<div class="w-3/4 h-3/4 border-2 border-accent-blue/50 rounded-full animate-spin-slow"></div>
+<div class="absolute w-1/2 h-1/2 border-2 border-accent-green/50 rounded-full animate-spin-reverse-slow"></div>
+<span class="absolute text-xl font-bold text-accent-blue/70 opacity-0 md:opacity-100">PROCESSING DATA</span>
+</div>
+</div>
+<div class="relative z-10 space-y-6 flex flex-col md:col-span-1 lg:col-span-1">
+<div class="bg-card-dark rounded-lg p-4 border border-border-light shadow-lg shadow-accent-blue/10 transform transition-all duration-300 hover:scale-[1.02] hover:border-accent-blue">
+<label class="text-text-light text-sm font-medium mb-3 block text-accent-blue uppercase tracking-wider" for="data-ingest">Data Ingest: File</label>
+<div class="flex flex-col items-center justify-center p-6 border-2 border-dashed border-input-border rounded-lg text-center cursor-pointer hover:bg-white/5 transition-colors group">
+<span class="material-symbols-outlined text-4xl text-accent-green mb-2 group-hover:scale-110 transition-transform">cloud_upload</span>
+<p class="text-placeholder text-xs">Drag/Drop or <span class="text-accent-blue font-medium">Locate Binary</span></p>
+<input class="hidden" id="data-ingest" type="file"/>
+</div>
+</div>
+<div class="relative bg-card-dark rounded-lg p-4 border border-input-border shadow-lg shadow-accent-blue/10 transform transition-all duration-300 hover:scale-[1.02] hover:border-accent-blue">
+<label class="absolute -top-2 left-3 text-xs text-accent-blue bg-card-dark px-1 uppercase tracking-wider" for="data-source">Data Ingest: URL</label>
+<input class="w-full h-14 px-4 py-2 bg-transparent border border-input-border rounded-lg focus:ring-2 focus:ring-input-focus focus:border-input-focus transition-colors duration-300 text-text-light placeholder:text-placeholder" id="data-source" placeholder="https://source.neuralink.com/stream.mp4" type="text"/>
+</div>
+<div class="relative bg-card-dark rounded-lg p-4 border border-input-border shadow-lg shadow-accent-blue/10 transform transition-all duration-300 hover:scale-[1.02] hover:border-accent-blue">
+<label class="absolute -top-2 left-3 text-xs text-accent-blue bg-card-dark px-1 uppercase tracking-wider" for="algorithmic-params">Algorithmic Parameters</label>
+<div class="relative">
+<select class="w-full h-14 px-4 py-2 bg-transparent border border-input-border rounded-lg appearance-none focus:ring-2 focus:ring-input-focus focus:border-input-focus transition-colors duration-300 text-text-light" id="algorithmic-params">
+<option class="bg-card-dark text-text-light">Cognitive Core (Fast)</option>
+<option class="bg-card-dark text-text-light">Deepmind Nexus (Accurate)</option>
+<option class="bg-card-dark text-text-light">Hybrid Synapse (Balanced)</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-accent-green">arrow_drop_down</span>
+</div>
+</div>
+<button class="w-full bg-button-bg text-white font-medium py-3 px-4 rounded-full flex items-center justify-center h-12 shadow-lg shadow-accent-blue/20 hover:bg-button-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-input-focus focus:ring-offset-card-dark transition-all duration-300 ease-in-out uppercase tracking-widest group">
+<span class="group-[.loading]:hidden">Initiate Synthesis</span>
+<span class="loader hidden group-[.loading]:inline-block !border-white"></span>
+</button>
+</div>
+<div class="md:col-span-1 lg:col-span-2 relative z-10 bg-card-dark rounded-lg p-4 border-2 border-output-border shadow-lg shadow-accent-green/10 min-h-[250px] flex flex-col">
+<h2 class="text-accent-green text-sm font-medium mb-3 uppercase tracking-wider">Synthesized Output</h2>
+<div class="bg-output-bg p-3 rounded-lg min-h-[200px] border border-output-border/50 flex-grow">
+<p class="text-placeholder text-xs leading-relaxed font-mono">Output stream awaiting data. Please configure parameters and initiate synthesis.</p>
+</div>
+</div>
+</main>
+</div>
+<style>
+  @keyframes spin-slow {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  @keyframes spin-reverse-slow {
+    0% { transform: rotate(360deg); }
+    100% { transform: rotate(0deg); }
+  }
+  .animate-spin-slow {
+    animation: spin-slow 12s linear infinite;
+  }
+  .animate-spin-reverse-slow {
+    animation: spin-reverse-slow 8s linear infinite;
+  }
+  .animate-pulse {
+    animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+  @keyframes pulse {
+    0%, 100% {
+      opacity: 0.7;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.9;
+      transform: scale(1.03);
+    }
+  }
+</style>
+</body></html>

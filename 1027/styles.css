@@ -1,0 +1,11 @@
+.tag {
+  cursor: pointer;
+  user-select: none;
+  transition: background-color .2s,color .2s;
+  padding: .35rem .75rem;
+  font-weight: 500;
+}
+#strength-text {
+  font-size: .85rem;
+  font-weight: 600;
+}

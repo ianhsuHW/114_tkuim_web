@@ -1,0 +1,315 @@
+/* ==================== 快速城市按鈕 ==================== */
+.quick-cities-section {
+    margin: 2rem 0;
+}
+
+.quick-cities-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: white;
+    margin-bottom: 1.5rem;
+}
+
+.quick-cities-title i {
+    color: var(--primary-color);
+    margin-right: 0.5rem;
+}
+
+.quick-cities {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* 分類標籤 */
+.category-label {
+    font-size: 0.9rem;
+    font-weight: 700;
+    padding: 0.4rem 1rem;
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    color: white;
+    border-radius: 20px;
+    margin-right: 0.5rem;
+    box-shadow: 0 2px 8px rgba(74, 144, 226, 0.3);
+    white-space: nowrap;
+}
+
+/* 快速城市按鈕 */
+.quick-cities-section {
+    margin: 2rem 0;
+}
+
+.quick-cities-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: white;
+    margin-bottom: 1.5rem;
+    text-align: left;
+}
+
+.quick-cities-title i {
+    color: var(--primary-color);
+    margin-right: 0.5rem;
+}
+
+.quick-cities {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* 城市分類（靠左對齊）*/
+.city-category {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 1rem;
+    border-radius: 15px;
+    transition: all 0.3s ease;
+}
+
+
+
+/* 分類標籤 */
+.category-label {
+    font-size: 0.9rem;
+    font-weight: 700;
+    padding: 0.4rem 1rem;
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    color: white;
+    border-radius: 20px;
+    margin-right: 0.5rem;
+    box-shadow: 0 2px 8px rgba(74, 144, 226, 0.3);
+    white-space: nowrap;
+}
+
+/* 快速城市按鈕 */
+.quick-city-btn {
+    padding: 0.5rem 1rem;
+    background: rgba(255, 255, 255, 0.15);
+    border: 1.5px solid rgba(255, 255, 255, 0.25);
+    border-radius: 20px;
+    color: white;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(5px);
+}
+
+.quick-city-btn:hover {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+    color: white;
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(74, 144, 226, 0.4);
+}
+
+.quick-city-btn:active {
+    transform: translateY(-1px);
+}
+
+[data-theme="dark"] .quick-city-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* 特殊警告按鈕（柬埔寨）*/
+.city-category.special {
+    background: rgba(255, 59, 48, 0.05);
+    border-color: rgba(255, 59, 48, 0.2);
+}
+
+.quick-city-btn.danger-zone {
+    background: rgba(255, 59, 48, 0.15);
+    border-color: rgba(255, 59, 48, 0.4);
+    color: #ff6b6b;
+    font-weight: 600;
+}
+
+.quick-city-btn.danger-zone:hover {
+    background: rgba(255, 59, 48, 0.8);
+    border-color: #ff3b30;
+    color: white;
+    box-shadow: 0 4px 12px rgba(255, 59, 48, 0.4);
+}
+
+.quick-city-btn.danger-zone i {
+    margin-right: 0.3rem;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+/* ==================== 搜尋歷史和收藏 ==================== */
+.history-title,
+.favorites-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    text-align: center;
+    width: 100%;
+}
+
+.history-tags,
+#searchHistory,
+#favoritesList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    margin-top: 1rem;
+}
+
+/* 標籤樣式 */
+.history-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1rem;
+    background: rgba(255, 255, 255, 0.15);
+    border: 1.5px solid rgba(255, 255, 255, 0.25);
+    border-radius: 25px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: white;
+    backdrop-filter: blur(5px);
+}
+.favorite-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1rem;
+    background: rgba(255, 255, 255, 0.15);
+    border: 1.5px solid rgba(255, 255, 255, 0.25);
+    border-radius: 25px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: white;
+    backdrop-filter: blur(5px);
+}
+
+.history-tag:hover,
+.favorite-tag:hover {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
+}
+
+.history-tag i.fa-times,
+.favorite-tag i.fa-times {
+    margin-left: 0.5rem;
+    font-size: 0.8rem;
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+}
+
+.history-tag:hover i.fa-times,
+.favorite-tag:hover i.fa-times {
+    opacity: 1;
+}
+
+/* 收藏標籤特殊樣式 */
+.favorite-tag {
+    background: rgba(255, 193, 7, 0.15);
+    border-color: rgba(255, 193, 7, 0.4);
+}
+
+.favorite-tag:hover {
+    background: #ffc107;
+    border-color: #ffc107;
+    color: #000;
+}
+
+/* 清除按鈕 */
+#clearHistoryBtn {
+    margin-top: 1rem;
+    padding: 0.5rem 1rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1.5px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    color: white;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#clearHistoryBtn:hover {
+    background: rgba(231, 76, 60, 0.8);
+    border-color: #e74c3c;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(231, 76, 60, 0.3);
+}
+
+#clearFavoritesBtn {
+    padding: 0.5rem 1.2rem;
+    background: transparent;
+    border: 1.5px solid rgba(255, 193, 7, 0.5);
+    border-radius: 20px;
+    color: #ffc107;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#clearFavoritesBtn:hover {
+    background: rgba(255, 193, 7, 0.9);
+    border-color: #ffc107;
+    color: #000;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 193, 7, 0.4);
+}
+
+#clearFavoritesBtn i {
+    margin-right: 0.3rem;
+}
+
+[data-theme="dark"] #clearFavoritesBtn {
+    border-color: rgba(255, 193, 7, 0.6);
+}
+
+/* 深色模式標籤 */
+[data-theme="dark"] .history-tag {
+    background: rgba(91, 163, 245, 0.05);
+    border-color: rgba(91, 163, 245, 0.25);
+}
+
+[data-theme="dark"] .history-tag:hover {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+[data-theme="dark"] .favorite-tag {
+    background: rgba(255, 193, 7, 0.05);
+    border-color: rgba(255, 193, 7, 0.3);
+}
+
+[data-theme="dark"] .favorite-tag:hover {
+    background: #ffc107;
+    border-color: #ffc107;
+    color: #000;
+}
+
+[data-theme="dark"] #clearHistoryBtn {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+[data-theme="dark"] #clearHistoryBtn:hover {
+    background: rgba(231, 76, 60, 0.8);
+    border-color: #e74c3c;
+}
