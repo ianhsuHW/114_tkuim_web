@@ -1,13 +1,13 @@
 public class CourseInfo {
     public static void main(String[] args) {
-        String courseName = "Programming and Data Structures";
-        int credits = 3;
-        int hours = 3;
-        boolean required = true;
+        String CN = "Programming and Data Structures";
+        int C = 3;
+        int H = 3;
+        boolean R = true;
 
-        System.out.println("Course Name: " + courseName);
-        System.out.println("Credits: " + credits);
-        System.out.println("Hours: " + hours);
-        System.out.println("Required: " + required);
+        System.out.println("Course Name: " + CN);
+        System.out.println("Credits: " + C);
+        System.out.println("Hours: " + H);
+        System.out.println("Required: " + R);
     }
 }

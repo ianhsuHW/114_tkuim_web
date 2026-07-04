@@ -5,12 +5,12 @@ public class GreetingInput {
         Scanner sc = new Scanner(System.in);
 
         System.out.print("請輸入姓名：");
-        String name = sc.nextLine();
+        String N = sc.nextLine();
 
         System.out.print("請輸入年齡：");
-        int age = sc.nextInt();
+        int A = sc.nextInt();
 
-        System.out.println("Hello, " + name + ". You are " + age + " years old.");
+        System.out.println("Hello, " + N + ". You are " + A + " years old.");
 
         sc.close();
     }

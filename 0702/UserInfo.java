@@ -1,13 +1,13 @@
 public class UserInfo {
     public static void main(String[] args) {
-        String userName = "Amy";
-        String userId = "412345678";
-        String department = "Information Management";
-        int expectedScore = 90;
+        String UN = "Amy";
+        String UI = "412345678";
+        String D = "Information Management";
+        int ES = 90;
 
-        System.out.println("Name: " + userName);
-        System.out.println("ID: " + userId);
-        System.out.println("Department: " + department);
-        System.out.println("Expected Score: " + expectedScore);
+        System.out.println("Name: " + UN);
+        System.out.println("ID: " + UI);
+        System.out.println("Department: " + D);
+        System.out.println("Expected Score: " + ES);
     }
 }
