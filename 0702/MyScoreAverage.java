@@ -4,8 +4,8 @@ public class MyScoreAverage {
         int ES = 78;
         int MS = 92;
 
-        double A = (JS + ES + MS) / 3.0;
+        double avg = (JS + ES + MS) / 3.0;
 
-        System.out.println("Average score: " + A);
+        System.out.println("Average score: " + avg);
     }
 }
