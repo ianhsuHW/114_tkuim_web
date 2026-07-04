@@ -1,0 +1,69 @@
+/* ==================== 全域變數設定 ==================== */
+:root {
+    /* 顏色變數 */
+    --primary-color: #4A90E2;
+    --secondary-color: #5BA3F5;
+    --dark-color: #2C3E50;
+    --light-color: #ECF0F1;
+    --success-color: #2ECC71;
+    --warning-color: #F39C12;
+    --danger-color: #E74C3C;
+
+    /* 深淺色模式變數 */
+    --bg-color: #ECF0F1;
+    --text-color: #2C3E50;
+    --text-secondary: #7f8c8d;
+    --card-bg: #ffffff;
+    --card-shadow: rgba(0, 0, 0, 0.15);
+    --input-bg: #ffffff;
+    --input-border: #ddd;
+    --border-color: #ecf0f1;
+    --primary-hover: #3a7bc8;
+
+    /* 漸層 */
+    --gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --gradient-2: linear-gradient(135deg, #4A90E2 0%, #5BA3F5 100%);
+
+    /* 陰影 */
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 20px rgba(0, 0, 0, 0.15);
+
+    /* 過渡動畫 */
+    --transition: all 0.3s ease;
+
+    /* 基礎字體大小 */
+    font-size: 18px;
+}
+
+/* 深色模式變數 */
+[data-theme="dark"] {
+    --bg-color: #0f0f1e;
+    --text-color: #e8e8e8;
+    --text-secondary: #a0a0a0;
+    --card-bg: #1a1a2e;
+    --card-shadow: rgba(0, 0, 0, 0.5);
+    --input-bg: #16213e;
+    --input-border: #2d4059;
+    --border-color: #2d4059;
+    --primary-color: #5BA3F5;
+    --primary-hover: #4A90E2;
+    --gradient-1: linear-gradient(135deg, #434343 0%, #000000 100%);
+    --gradient-2: linear-gradient(135deg, #16213e 0%, #0f3460 100%);
+}
+
+/* ==================== 全域重置 ==================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: var(--text-color);
+    background: var(--bg-color);
+    overflow-x: hidden;
+    transition: background 0.3s ease, color 0.3s ease;
+}

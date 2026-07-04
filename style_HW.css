@@ -1,0 +1,207 @@
+/* ===========================
+   HW 主題變數（10 項必改參數＋冷色系）
+   =========================== */
+:root{
+  /* (1) 背景漸層：天藍 → 青綠（冷色、柔和） */
+  --hw-bg-grad-start: #0ea5e9; /* sky-500 */
+  --hw-bg-grad-end:   #22d3ee; /* cyan-400 */
+
+  /* (2)(3) 主標題色與字級（深藍、穩重） */
+  --hw-title-color: #0b3d91;  /* 深海軍藍 */
+  --hw-h1-size:     3em;      /* 3em，維持大標清楚 */
+
+  /* (4)(5) 副標題色與字級（青藍） */
+  --hw-h2-color: #0ea5e9; /* 與背景同系色，和諧 */
+  --hw-h2-size:  2em;
+
+  /* (6) 容器最大寬度 */
+  --hw-container-w: 1000px;
+
+  /* (7) 表頭底色（深藍） */
+  --hw-th-bg: #155e75; /* teal-700 偏冷 */
+
+  /* (8) 卡片 hover 位移 */
+  --hw-hover-lift: -8px;
+
+  /* (9) 列表符號改為 ➤（冷色科技感） */
+  --hw-bullet: "➤";
+
+  /* (10) 連結顏色（青藍） */
+  --hw-link: #0284c7; /* sky-600 */
+
+  /* 額外客製（加分 & 陰影強化） */
+  --hw-text: #1f2937;           /* 深灰：好讀 */
+  --hw-muted: #64748b;          /* 藍灰 */
+  --hw-card-bg: rgba(255,255,255,0.9);  /* 卡片更清晰 */
+  --hw-card-border: rgba(14,165,233,0.18); /* 藍系邊框 */
+
+  /* 多層陰影（更立體） */
+  --hw-shadow: 
+    0 1px 2px rgba(2, 6, 23, 0.06),
+    0 6px 14px rgba(2, 6, 23, 0.10),
+    0 12px 30px rgba(2, 6, 23, 0.10);
+  --hw-shadow-hover:
+    0 2px 4px rgba(2, 6, 23, 0.08),
+    0 10px 22px rgba(2, 6, 23, 0.14),
+    0 18px 40px rgba(2, 6, 23, 0.16);
+
+  --hw-transition: 220ms ease;
+  --hw-tr-hover-row: #ecfeff;  /* 淡青 hover */
+}
+
+/* ===========================
+   基本（Part 1）
+   =========================== */
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+
+.hw-body{
+  /* 冷色漸層＋微暗角提升聚焦度 */
+  background:
+    radial-gradient(1200px 700px at 85% -10%, rgba(255,255,255,0.18), transparent 60%),
+    radial-gradient(1000px 600px at -10% 110%, rgba(255,255,255,0.12), transparent 60%),
+    linear-gradient(135deg, var(--hw-bg-grad-start) 0%, var(--hw-bg-grad-end) 100%);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC",
+               Roboto, "Helvetica Neue", Arial, "PingFang TC", "Microsoft JhengHei", sans-serif;
+  color: var(--hw-text);
+  line-height: 1.75;
+}
+
+/* 容器 */
+.hw-container{
+  max-width: var(--hw-container-w);
+  margin: clamp(16px, 4vw, 48px) auto;
+  padding: clamp(12px, 3vw, 24px);
+}
+
+/* 卡片：玻璃感＋強化陰影 */
+.hw-section{
+  background: var(--hw-card-bg);
+  border: 1px solid var(--hw-card-border);
+  border-radius: 18px;
+  padding: clamp(16px, 3vw, 28px);
+  box-shadow: var(--hw-shadow);
+  backdrop-filter: saturate(140%) blur(6px);
+  transition: transform var(--hw-transition), box-shadow var(--hw-transition);
+  margin-bottom: clamp(16px, 3.5vw, 28px);
+}
+.hw-section:hover{
+  transform: translateY(var(--hw-hover-lift));
+  box-shadow: var(--hw-shadow-hover);
+}
+
+/* 標題 */
+.hw-title{
+  color: var(--hw-title-color);
+  font-size: var(--hw-h1-size);
+  letter-spacing: 0.5px;
+  margin: 0 0 6px;
+}
+.hw-subtitle{
+  color: var(--hw-muted);
+  margin: 0 0 14px;
+}
+.hw-h2{
+  color: var(--hw-h2-color);
+  font-size: var(--hw-h2-size);
+  margin: 0 0 12px;
+}
+
+/* 段落 */
+p{ color: var(--hw-text); margin: 0 0 12px; }
+
+/* 列表（➤ 符號） */
+.hw-checklist{
+  list-style: none;
+  padding-left: 0;
+  margin: 10px 0 0;
+}
+.hw-checklist li{
+  position: relative;
+  padding-left: 1.6em;
+  margin: 8px 0;
+}
+.hw-checklist li::before{
+  content: var(--hw-bullet);
+  position: absolute;
+  left: 0;
+  top: 0.08em;
+  font-size: 1.05em;
+  line-height: 1;
+  opacity: .85;
+}
+
+/* 表格（冷色＋高可讀） */
+.hw-table-wrap{ overflow-x: auto; }
+.hw-table{
+  width: 100%;
+  border-collapse: collapse;
+  background: #ffffff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow:
+    0 1px 1px rgba(2, 6, 23, 0.04),
+    0 8px 18px rgba(2, 6, 23, 0.08);
+}
+.hw-table thead th{
+  background-color: var(--hw-th-bg);
+  color: #f8fafc;
+  text-align: left;
+  padding: 12px 14px;
+  letter-spacing: 0.3px;
+}
+.hw-table tbody td{
+  padding: 12px 14px;
+  border-bottom: 1px solid #e6eef5;
+}
+.hw-table tbody tr:nth-child(even){
+  background: #f8fdff;
+}
+.hw-table tbody tr:hover{
+  background: var(--hw-tr-hover-row);
+  transition: background var(--hw-transition);
+}
+
+/* 連結（青藍＋底線陰影） */
+.hw-link, a.hw-link{
+  color: var(--hw-link);
+  text-decoration: none;
+  transition: color var(--hw-transition), box-shadow var(--hw-transition);
+  box-shadow: inset 0 -2px 0 0 rgba(2,132,199,0.28);
+}
+.hw-link:hover{
+  color: #0369a1; /* sky-700 */
+  box-shadow: inset 0 -10px 0 0 rgba(2,132,199,0.18);
+}
+
+/* 小按鈕（冷色邊框＋陰影） */
+.hw-btn{
+  display: inline-block;
+  margin-top: 6px;
+  padding: 10px 16px;
+  border-radius: 999px;
+  background: #ffffff;
+  color: var(--hw-link);
+  border: 1px solid rgba(2,132,199,0.3);
+  box-shadow: var(--hw-shadow);
+  transition: transform var(--hw-transition), box-shadow var(--hw-transition), background var(--hw-transition);
+}
+.hw-btn:hover{
+  transform: translateY(-3px);
+  background: #f0f9ff;
+  box-shadow: var(--hw-shadow-hover);
+}
+
+/* 頁尾 */
+.hw-footer{
+  text-align: center;
+  color: #475569;
+  margin-top: 12px;
+}
+
+/* RWD */
+@media (max-width: 680px){
+  .hw-title{ font-size: clamp(2.1em, 7vw, var(--hw-h1-size)); }
+  .hw-h2{ font-size: clamp(1.6em, 5.2vw, var(--hw-h2-size)); }
+  .hw-section{ padding: 14px; }
+}

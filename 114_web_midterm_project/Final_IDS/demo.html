@@ -1,0 +1,1197 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SocksTrading - Demo Preview</title>
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        slate: { 800: '#1e293b', 900: '#0f172a' },
+                        indigo: { 500: '#6366f1', 600: '#4f46e5' },
+                        amber: { 500: '#f59e0b' }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .password-toggle {
+            cursor: pointer;
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9ca3af;
+        }
+
+        .password-toggle:hover {
+            color: #f3f4f6;
+        }
+    </style>
+</head>
+
+<body class="bg-slate-900 text-white min-h-screen">
+
+    <!-- Navbar -->
+    <nav class="bg-slate-800 border-b border-slate-700 p-4 sticky top-0 z-50">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="#" class="text-2xl font-bold text-indigo-400 flex items-center gap-2" onclick="showPage('home')">
+                🧦 SocksTrading
+            </a>
+            <div class="flex items-center gap-4">
+                <a href="#" class="hover:text-indigo-400 transition"
+                    onclick="event.preventDefault(); showPage('home')">首頁</a>
+                <a href="#" class="hover:text-indigo-400 transition"
+                    onclick="event.preventDefault(); showPage('leaderboard')">熱門排行</a>
+                <div id="auth-buttons" class="flex gap-2">
+                    <button onclick="showLoginModal()"
+                        class="bg-indigo-600 px-4 py-2 rounded hover:bg-indigo-700 transition">登入</button>
+                    <button onclick="showRegisterModal()"
+                        class="border border-indigo-600 px-4 py-2 rounded hover:bg-slate-700 transition">註冊</button>
+                </div>
+                <div id="user-profile" class="hidden relative group">
+                    <button class="flex items-center gap-2 hover:opacity-80 transition focus:outline-none"
+                        onclick="toggleUserDropdown()">
+                        <img id="nav-avatar" src=""
+                            class="w-8 h-8 rounded-full border border-gray-500 bg-slate-700 object-cover">
+                        <span id="nav-username" class="font-medium"></span>
+                        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7">
+                            </path>
+                        </svg>
+                    </button>
+                    <!-- Dropdown Menu -->
+                    <div id="user-dropdown"
+                        class="absolute right-0 mt-2 w-48 bg-slate-800 rounded-xl shadow-2xl border border-slate-700 hidden overflow-hidden z-50">
+                        <a href="#" onclick="openUserSettings(); toggleUserDropdown()"
+                            class="block px-4 py-3 hover:bg-slate-700 border-b border-slate-700">⚙️ 個人設定</a>
+                        <a href="#" onclick="showPage('seller-upload'); toggleUserDropdown()"
+                            class="block px-4 py-3 hover:bg-slate-700 text-amber-500 font-bold">📤 上架商品</a>
+                        <a href="#" onclick="showPage('seller-products'); toggleUserDropdown()"
+                            class="block px-4 py-3 hover:bg-slate-700">📦 我的商品</a>
+                        <a href="#" onclick="handleLogout(); toggleUserDropdown()"
+                            class="block px-4 py-3 hover:bg-red-900/20 text-red-400">🚪 登出</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Content: Home -->
+    <main id="page-home" class="container mx-auto p-4 py-8">
+        <div class="text-center mb-12">
+            <h1
+                class="text-5xl font-extrabold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-purple-500">
+                尋找你的命定好襪</h1>
+            <p class="text-gray-400 text-xl max-w-2xl mx-auto">全台最大二手襪子交易平台。</p>
+        </div>
+
+        <div class="flex flex-wrap gap-4 justify-center mb-8">
+            <button onclick="filterContent('sellers', event)"
+                class="filter-btn bg-indigo-600 text-white shadow-lg px-4 py-2 rounded-full font-medium transition hover:scale-105">全部賣家</button>
+            <button onclick="filterContent('auction', event)"
+                class="filter-btn bg-slate-700 text-gray-300 px-4 py-2 rounded-full font-medium transition hover:scale-105">🔥
+                熱門競標</button>
+            <button onclick="filterContent('fixed', event)"
+                class="filter-btn bg-slate-700 text-gray-300 px-4 py-2 rounded-full font-medium transition hover:scale-105">💰
+                直購專區</button>
+        </div>
+
+        <div id="main-content-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Rendered via JS -->
+        </div>
+    </main>
+
+    <!-- Page Content: Leaderboard -->
+    <main id="page-leaderboard" class="container mx-auto p-4 py-8 hidden">
+        <h2 class="text-4xl font-bold mb-8 text-center text-amber-400">🏆 賣家銷售排行榜</h2>
+        <div class="max-w-4xl mx-auto space-y-4">
+            <!-- Rank 1: Ricardo -->
+            <div
+                class="bg-gradient-to-r from-slate-800 to-slate-700 rounded-xl p-6 flex items-center border border-amber-500/50 shadow-lg">
+                <div class="text-4xl font-bold text-amber-400 w-16 text-center">#1</div>
+                <div class="flex flex-col items-center mx-6 w-32 cursor-pointer hover:scale-105 transition"
+                    onclick="showSellerProfile('Ricardo')">
+                    <img src="./server/uploads/seller_ricardo_new.jpg"
+                        class="w-20 h-20 rounded-full border-4 border-amber-400 object-cover mb-2">
+                    <span class="font-bold text-lg text-white">Ricardo</span>
+                    <span class="text-xs text-gray-400">Top Seller</span>
+                </div>
+                <div class="flex-1 flex items-center bg-slate-900/50 rounded-lg p-4 cursor-pointer hover:bg-slate-800 hover:scale-[1.02] transition relative z-10"
+                    onclick="showProductDetail(2)">
+                    <img src="./server/uploads/socks1.jpg" class="w-16 h-16 rounded object-cover mr-4">
+                    <div>
+                        <h4 class="font-bold text-xl text-indigo-300">戰鬥用白襪</h4>
+                        <p class="text-sm text-gray-400">象徵自由的熱銷品</p>
+                    </div>
+                </div>
+                <div class="w-40 text-right pl-4">
+                    <p class="text-gray-400 text-sm">已售出</p>
+                    <p class="text-3xl font-bold text-white">9,999 <span class="text-sm font-normal">件</span></p>
+                </div>
+            </div>
+
+            <!-- Rank 2: Rock -->
+            <div class="bg-slate-800 rounded-xl p-6 flex items-center border border-slate-600 shadow-lg">
+                <div class="text-4xl font-bold text-gray-400 w-16 text-center">#2</div>
+                <div class="flex flex-col items-center mx-6 w-32 cursor-pointer hover:scale-105 transition"
+                    onclick="showSellerProfile('Rock')">
+                    <img src="./server/uploads/seller_rock.jpg"
+                        class="w-16 h-16 rounded-full border-2 border-gray-400 object-cover mb-2">
+                    <span class="font-bold text-lg text-white">Rock</span>
+                </div>
+                <div class="flex-1 flex items-center bg-slate-900/50 rounded-lg p-4 cursor-pointer hover:bg-slate-800 hover:scale-[1.02] transition relative z-10"
+                    onclick="showProductDetail(1)">
+                    <img src="./server/uploads/socks1.jpg" class="w-16 h-16 rounded object-cover mr-4">
+                    <div>
+                        <h4 class="font-bold text-lg text-indigo-300">絕版經典原味襪</h4>
+                        <p class="text-sm text-gray-400">回購率極高</p>
+                    </div>
+                </div>
+                <div class="w-40 text-right pl-4">
+                    <p class="text-gray-400 text-sm">已售出</p>
+                    <p class="text-3xl font-bold text-white">5,000 <span class="text-sm font-normal">件</span></p>
+                </div>
+            </div>
+
+            <!-- Rank 3: Trump -->
+            <div class="bg-slate-800 rounded-xl p-6 flex items-center border border-slate-600 shadow-lg">
+                <div class="text-4xl font-bold text-orange-700 w-16 text-center">#3</div>
+                <div class="flex flex-col items-center mx-6 w-32 cursor-pointer hover:scale-105 transition"
+                    onclick="showSellerProfile('Trump')">
+                    <img src="./server/uploads/seller_trump.jpg"
+                        class="w-16 h-16 rounded-full border-2 border-orange-700 object-cover mb-2">
+                    <span class="font-bold text-lg text-white">Trump</span>
+                </div>
+                <div class="flex-1 flex items-center bg-slate-900/50 rounded-lg p-4 cursor-pointer hover:bg-slate-800 hover:scale-[1.02] transition relative z-10"
+                    onclick="showProductDetail(3)">
+                    <img src="./server/uploads/socks_tights.png" class="w-16 h-16 rounded object-cover mr-4">
+                    <div>
+                        <h4 class="font-bold text-lg text-indigo-300">頂級奢華黑絲襪</h4>
+                        <p class="text-sm text-gray-400">高端市場首選</p>
+                    </div>
+                </div>
+                <div class="w-40 text-right pl-4">
+                    <p class="text-gray-400 text-sm">已售出</p>
+                    <p class="text-3xl font-bold text-white">1,337 <span class="text-sm font-normal">件</span></p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+
+    <!-- Page: Seller Upload -->
+    <main id="page-seller-upload" class="container mx-auto p-4 py-8 hidden">
+        <div class="max-w-3xl mx-auto bg-slate-800 rounded-2xl p-8 border border-slate-700 shadow-2xl">
+            <h2
+                class="text-3xl font-bold mb-8 text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-500">
+                📤 上架新商品</h2>
+
+            <div class="space-y-6">
+                <!-- Image Upload -->
+                <div class="border-2 border-dashed border-slate-600 rounded-xl p-8 text-center hover:bg-slate-700/50 transition cursor-pointer group"
+                    onclick="document.getElementById('upload-photo').click()">
+                    <input type="file" id="upload-photo" class="hidden" accept="image/*" onchange="previewUpload(this)">
+                    <img id="upload-preview" src="" class="hidden max-h-64 mx-auto rounded-lg shadow-lg">
+                    <div id="upload-placeholder" class="group-hover:scale-110 transition duration-300">
+                        <div class="text-5xl mb-3">📸</div>
+                        <p class="text-gray-400 font-medium">點擊或拖優圖片至此</p>
+                        <p class="text-xs text-gray-500 mt-1">支援 JPG, PNG</p>
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-gray-400 text-sm mb-2 font-bold">商品名稱</label>
+                        <input type="text" id="up-title"
+                            class="w-full bg-slate-900 border border-slate-600 rounded-lg px-4 py-3 focus:border-indigo-500 focus:outline-none transition"
+                            placeholder="例如：純棉除臭襪">
+                    </div>
+                    <div>
+                        <label class="block text-gray-400 text-sm mb-2 font-bold">販售模式</label>
+                        <div class="flex bg-slate-900 rounded-lg p-1 border border-slate-600">
+                            <button onclick="setUploadMode('fixed')" id="btn-mode-fixed"
+                                class="flex-1 py-2 rounded-md bg-indigo-600 text-white font-bold text-sm transition">直購
+                                Fixed</button>
+                            <button onclick="setUploadMode('auction')" id="btn-mode-auction"
+                                class="flex-1 py-2 rounded-md text-gray-400 font-bold text-sm hover:text-white transition">競標
+                                Auction</button>
+                        </div>
+                        <input type="hidden" id="up-mode" value="fixed">
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-gray-400 text-sm mb-2 font-bold" id="label-price">直購價格 (NT$)</label>
+                        <div class="relative">
+                            <span class="absolute left-4 top-3 text-gray-500">$</span>
+                            <input type="number" id="up-price"
+                                class="w-full bg-slate-900 border border-slate-600 rounded-lg pl-8 pr-4 py-3 font-mono text-xl focus:border-indigo-500 focus:outline-none"
+                                placeholder="100">
+                        </div>
+                    </div>
+                    <div id="field-duration" class="hidden">
+                        <label class="block text-gray-400 text-sm mb-2 font-bold">競標時間</label>
+                        <select id="up-duration"
+                            class="w-full bg-slate-900 border border-slate-600 rounded-lg px-4 py-3">
+                            <option value="60000">1 分鐘 (測試)</option>
+                            <option value="3600000">1 小時</option>
+                            <option value="86400000">24 小時</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-gray-400 text-sm mb-2 font-bold">商品描述</label>
+                    <textarea id="up-desc" rows="4"
+                        class="w-full bg-slate-900 border border-slate-600 rounded-lg px-4 py-3 focus:border-indigo-500 focus:outline-none"
+                        placeholder="描述商品狀態、尺寸、穿著體驗..."></textarea>
+                </div>
+
+                <button onclick="submitProduct()"
+                    class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold py-4 rounded-xl shadow-lg transform hover:scale-[1.01] transition flex items-center justify-center gap-2 text-lg">
+                    <span>🚀 確認上架</span>
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Page: Seller Products -->
+    <main id="page-seller-products" class="container mx-auto p-4 py-8 hidden">
+        <h2 class="text-3xl font-bold mb-8 text-white flex items-center gap-3">
+            📦 我的商品管理
+            <span class="text-sm bg-indigo-600 px-3 py-1 rounded-full text-white" id="my-prod-count">0</span>
+        </h2>
+        <div class="bg-slate-800 rounded-xl overflow-hidden shadow-xl border border-slate-700">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left">
+                    <thead class="bg-slate-900 text-gray-400 uppercase text-xs font-bold">
+                        <tr>
+                            <th class="p-4">商品圖片</th>
+                            <th class="p-4">名稱</th>
+                            <th class="p-4">價格 / 目前出價</th>
+                            <th class="p-4">狀態</th>
+                            <th class="p-4">模式</th>
+                            <th class="p-4 text-right">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="my-products-list" class="divide-y divide-slate-700">
+                        <!-- Dynamic Info -->
+                    </tbody>
+                </table>
+            </div>
+            <div id="no-products-msg" class="hidden p-12 text-center text-gray-400">
+                <p class="text-xl mb-4">您還沒有上架任何商品 🍃</p>
+                <button onclick="showPage('seller-upload')"
+                    class="text-indigo-400 hover:text-indigo-300 underline">立即上架第一件商品</button>
+            </div>
+        </div>
+    </main>
+
+
+    <!-- Page: Seller Upload -->
+    <main id="page-seller-upload" class="container mx-auto p-4 py-8 hidden">
+        <div class="max-w-3xl mx-auto bg-slate-800 rounded-2xl p-8 border border-slate-700 shadow-2xl">
+            <h2
+                class="text-3xl font-bold mb-8 text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-500">
+                📤 上架新商品</h2>
+
+            <div class="space-y-6">
+                <!-- Image Upload -->
+                <div class="border-2 border-dashed border-slate-600 rounded-xl p-8 text-center hover:bg-slate-700/50 transition cursor-pointer group"
+                    onclick="document.getElementById('upload-photo').click()">
+                    <input type="file" id="upload-photo" class="hidden" accept="image/*" onchange="previewUpload(this)">
+                    <img id="upload-preview" src="" class="hidden max-h-64 mx-auto rounded-lg shadow-lg">
+                    <div id="upload-placeholder" class="group-hover:scale-110 transition duration-300">
+                        <div class="text-5xl mb-3">📸</div>
+                        <p class="text-gray-400 font-medium">點擊或拖優圖片至此</p>
+                        <p class="text-xs text-gray-500 mt-1">支援 JPG, PNG</p>
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-gray-400 text-sm mb-2 font-bold">商品名稱</label>
+                        <input type="text" id="up-title"
+                            class="w-full bg-slate-900 border border-slate-600 rounded-lg px-4 py-3 focus:border-indigo-500 focus:outline-none transition"
+                            placeholder="例如：純棉除臭襪">
+                    </div>
+                    <div>
+                        <label class="block text-gray-400 text-sm mb-2 font-bold">販售模式</label>
+                        <div class="flex bg-slate-900 rounded-lg p-1 border border-slate-600">
+                            <button onclick="setUploadMode('fixed')" id="btn-mode-fixed"
+                                class="flex-1 py-2 rounded-md bg-indigo-600 text-white font-bold text-sm transition">直購
+                                Fixed</button>
+                            <button onclick="setUploadMode('auction')" id="btn-mode-auction"
+                                class="flex-1 py-2 rounded-md text-gray-400 font-bold text-sm hover:text-white transition">競標
+                                Auction</button>
+                        </div>
+                        <input type="hidden" id="up-mode" value="fixed">
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-gray-400 text-sm mb-2 font-bold" id="label-price">直購價格 (NT$)</label>
+                        <div class="relative">
+                            <span class="absolute left-4 top-3 text-gray-500">$</span>
+                            <input type="number" id="up-price"
+                                class="w-full bg-slate-900 border border-slate-600 rounded-lg pl-8 pr-4 py-3 font-mono text-xl focus:border-indigo-500 focus:outline-none"
+                                placeholder="100">
+                        </div>
+                    </div>
+                    <div id="field-duration" class="hidden">
+                        <label class="block text-gray-400 text-sm mb-2 font-bold">競標時間</label>
+                        <select id="up-duration"
+                            class="w-full bg-slate-900 border border-slate-600 rounded-lg px-4 py-3">
+                            <option value="60000">1 分鐘 (測試)</option>
+                            <option value="3600000">1 小時</option>
+                            <option value="86400000">24 小時</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-gray-400 text-sm mb-2 font-bold">商品描述</label>
+                    <textarea id="up-desc" rows="4"
+                        class="w-full bg-slate-900 border border-slate-600 rounded-lg px-4 py-3 focus:border-indigo-500 focus:outline-none"
+                        placeholder="描述商品狀態、尺寸、穿著體驗..."></textarea>
+                </div>
+
+                <button onclick="submitProduct()"
+                    class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold py-4 rounded-xl shadow-lg transform hover:scale-[1.01] transition flex items-center justify-center gap-2 text-lg">
+                    <span>🚀 確認上架</span>
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Page: Seller Products -->
+    <main id="page-seller-products" class="container mx-auto p-4 py-8 hidden">
+        <h2 class="text-3xl font-bold mb-8 text-white flex items-center gap-3">
+            📦 我的商品管理
+            <span class="text-sm bg-indigo-600 px-3 py-1 rounded-full text-white" id="my-prod-count">0</span>
+        </h2>
+        <div class="bg-slate-800 rounded-xl overflow-hidden shadow-xl border border-slate-700">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left">
+                    <thead class="bg-slate-900 text-gray-400 uppercase text-xs font-bold">
+                        <tr>
+                            <th class="p-4">商品圖片</th>
+                            <th class="p-4">名稱</th>
+                            <th class="p-4">價格 / 目前出價</th>
+                            <th class="p-4">狀態</th>
+                            <th class="p-4">模式</th>
+                            <th class="p-4 text-right">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="my-products-list" class="divide-y divide-slate-700">
+                        <!-- Dynamic Info -->
+                    </tbody>
+                </table>
+            </div>
+            <div id="no-products-msg" class="hidden p-12 text-center text-gray-400">
+                <p class="text-xl mb-4">您還沒有上架任何商品 🍃</p>
+                <button onclick="showPage('seller-upload')"
+                    class="text-indigo-400 hover:text-indigo-300 underline">立即上架第一件商品</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal for Product Detail -->
+    <div id="product-modal" class="fixed inset-0 bg-black/80 hidden z-50 flex items-center justify-center p-4">
+        <div
+            class="bg-slate-800 rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto relative border border-slate-600 shadow-2xl">
+            <button onclick="closeModal('product-modal')"
+                class="absolute top-4 right-4 text-gray-400 hover:text-white text-2xl">&times;</button>
+            <div class="grid md:grid-cols-2 gap-0">
+                <div class="h-96 md:h-full bg-black flex items-center justify-center">
+                    <img id="modal-image" src="" class="max-h-full max-w-full object-contain">
+                </div>
+                <div class="p-8 space-y-6">
+                    <div class="flex items-center gap-3 cursor-pointer hover:bg-slate-700/50 p-2 rounded-lg transition"
+                        onclick="showSellerProfileFromValues()">
+                        <img id="modal-avatar" src="" class="w-12 h-12 rounded-full border-2 border-indigo-500">
+                        <div>
+                            <h3 id="modal-seller" class="font-bold text-lg"></h3>
+                            <p id="modal-bio" class="text-gray-400 text-sm"></p>
+                        </div>
+                    </div>
+                    <h2 id="modal-title" class="text-4xl font-bold"></h2>
+                    <p id="modal-desc" class="text-gray-300 leading-relaxed"></p>
+
+                    <div class="bg-slate-900/50 p-6 rounded-xl border border-slate-700">
+                        <div class="flex justify-between items-center mb-4">
+                            <span class="text-gray-400">目前價格</span>
+                            <span id="modal-price" class="text-3xl font-bold text-indigo-400"></span>
+                        </div>
+                        <div id="modal-auction-ui" class="space-y-4">
+                            <div
+                                class="flex justify-between items-center bg-slate-700/50 p-3 rounded-lg border border-slate-600">
+                                <span class="text-amber-400 font-bold text-sm">🕰️ 剩餘時間</span>
+                                <span id="countdown-timer" class="font-mono font-bold text-xl text-white">-- : -- :
+                                    --</span>
+                            </div>
+                            <div class="flex gap-2">
+                                <input type="number" id="bid-input" placeholder="輸入金額"
+                                    class="flex-1 bg-slate-700 border border-slate-600 rounded px-4 py-2 text-white">
+                                <button id="bid-btn" onclick="simulateBid()"
+                                    class="bg-amber-600 hover:bg-amber-500 text-black font-bold px-6 py-2 rounded transition">出價</button>
+                            </div>
+                        </div>
+                        <div id="modal-buy-ui" class="hidden">
+                            <button onclick="simulateBuy()"
+                                class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded transition text-lg">立即購買</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Seller Profile Modal (New) -->
+    <div id="seller-profile-modal" class="fixed inset-0 bg-black/90 hidden z-50 flex items-center justify-center p-4">
+        <div
+            class="bg-slate-900 rounded-xl max-w-5xl w-full max-h-[90vh] overflow-y-auto border border-slate-700 shadow-2xl relative">
+            <button onclick="closeModal('seller-profile-modal')"
+                class="absolute top-4 right-4 text-gray-400 hover:text-white text-3xl z-10">&times;</button>
+
+            <!-- Cover Photo / Header -->
+            <div class="h-48 bg-gradient-to-r from-indigo-900 to-slate-900 relative">
+                <div class="absolute -bottom-12 left-8 flex items-end gap-4">
+                    <img id="seller-view-avatar" src=""
+                        class="w-32 h-32 rounded-full border-4 border-slate-900 shadow-xl object-cover bg-slate-800">
+                    <div class="mb-2">
+                        <h2 id="seller-view-name" class="text-3xl font-bold text-white shadow-black drop-shadow-md">
+                        </h2>
+                        <p id="seller-view-bio"
+                            class="text-gray-300 font-medium bg-black/30 px-2 py-1 rounded inline-block"></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content -->
+            <div class="mt-16 p-8">
+                <h3 class="text-2xl font-bold mb-6 border-b border-slate-700 pb-2">該賣家的所有商品</h3>
+                <div id="seller-products-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Dynamic Content -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Settings Modal -->
+    <div id="settings-modal" class="fixed inset-0 bg-black/80 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-slate-800 rounded-xl p-8 max-w-lg w-full border border-slate-600 shadow-2xl relative">
+            <button onclick="closeModal('settings-modal')"
+                class="absolute top-4 right-4 text-gray-400 hover:text-white text-2xl">&times;</button>
+            <h2 class="text-2xl font-bold mb-6">個人資料設定</h2>
+            <div class="space-y-6">
+                <div class="flex items-center gap-6">
+                    <div class="relative group cursor-pointer"
+                        onclick="document.getElementById('avatar-upload').click()">
+                        <img id="settings-avatar" src=""
+                            class="w-24 h-24 rounded-full border-4 border-indigo-500 object-cover group-hover:opacity-75 transition">
+                        <div
+                            class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
+                            <span class="text-white font-bold text-sm bg-black/50 px-2 py-1 rounded">更換</span>
+                        </div>
+                    </div>
+                    <div class="flex-1">
+                        <label class="block text-sm text-gray-400 mb-1">顯示名稱</label>
+                        <input type="text" id="settings-username-input"
+                            class="w-full bg-slate-700 border border-slate-600 rounded px-3 py-1 text-white font-bold text-lg mb-1">
+
+                        <label class="block text-sm text-gray-400 mb-1">電話號碼</label>
+                        <input type="tel" id="settings-phone" placeholder="0912-345-678"
+                            class="w-full bg-slate-700 border border-slate-600 rounded px-3 py-1 text-white mb-1">
+
+                        <label class="block text-sm text-gray-400 mb-1">出生年月日</label>
+                        <input type="date" id="settings-dob"
+                            class="w-full bg-slate-700 border border-slate-600 rounded px-3 py-1 text-white mb-1">
+
+                        <input type="file" id="avatar-upload" class="hidden" accept="image/*"
+                            onchange="handleAvatarChange(this)">
+                    </div>
+                </div>
+                <hr class="border-slate-700">
+                <div>
+                    <h3 class="text-lg font-bold mb-4 text-indigo-400">💳 收付款資料 (信用卡)</h3>
+                    <div class="space-y-4">
+                        <div><label class="block text-sm text-gray-400 mb-1">信用卡號碼</label><input type="text"
+                                id="cc-number" placeholder="0000 0000 0000 0000"
+                                class="w-full bg-slate-700 border border-slate-600 rounded px-4 py-2 text-white font-mono">
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div><label class="block text-sm text-gray-400 mb-1">有效期限 (MM/YY)</label><input type="text"
+                                    id="cc-expiry" placeholder="12/25"
+                                    class="w-full bg-slate-700 border border-slate-600 rounded px-4 py-2 text-white font-mono">
+                            </div>
+                            <div><label class="block text-sm text-gray-400 mb-1">CVC / CVV</label><input type="password"
+                                    id="cc-cvc" placeholder="123"
+                                    class="w-full bg-slate-700 border border-slate-600 rounded px-4 py-2 text-white font-mono">
+                            </div>
+                        </div>
+                        <div class="flex gap-4 pt-4">
+                            <button onclick="saveUserSettings()"
+                                class="flex-1 bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2 rounded transition">儲存變更</button>
+                            <button onclick="handleLogout(); closeModal('settings-modal')"
+                                class="flex-1 bg-red-600/20 hover:bg-red-600/40 text-red-400 border border-red-600/50 font-bold py-2 rounded transition">登出</button>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Register Modal -->
+                <div id="register-modal"
+                    class="fixed inset-0 bg-black/80 hidden z-50 flex items-center justify-center p-4">
+                    <div class="bg-slate-800 rounded-xl p-8 max-w-md w-full border border-slate-600 shadow-2xl">
+                        <h2 class="text-2xl font-bold mb-4">註冊會員</h2>
+                        <label class="block text-sm text-gray-400 mb-1">使用者名稱 (Username)</label><input type="text"
+                            id="reg-username" placeholder="英文或數字"
+                            class="w-full bg-slate-700 border border-slate-600 rounded px-4 py-2 mb-3 text-white">
+                        <label class="block text-sm text-gray-400 mb-1">電子郵件帳號 (Email)</label><input type="text"
+                            id="reg-email" placeholder="example@domain.com"
+                            class="w-full bg-slate-700 border border-slate-600 rounded px-4 py-2 mb-3 text-white">
+                        <label class="block text-sm text-gray-400 mb-1">密碼 (Password)</label>
+                        <div class="relative mb-2"><input type="password" id="reg-password"
+                                placeholder="需含大寫、小寫、3個數字，長度>6"
+                                class="w-full bg-slate-700 border border-slate-600 rounded px-4 py-2 text-white pr-10"><span
+                                class="password-toggle" onclick="togglePassword('reg-password')">👁️</span></div>
+                        <p class="text-xs text-gray-500 mb-6">格式要求：至少1個大寫英文、1個小寫英文、3個數字，總長度超過6字。</p>
+                        <div class="flex gap-4"><button onclick="handleRegister()"
+                                class="flex-1 bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2 rounded transition">確認註冊</button><button
+                                onclick="closeModal('register-modal')"
+                                class="flex-1 bg-slate-700 hover:bg-slate-600 text-white font-bold py-2 rounded transition">取消</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Login Modal -->
+                <div id="login-modal"
+                    class="fixed inset-0 bg-black/80 hidden z-50 flex items-center justify-center p-4">
+                    <div class="bg-slate-800 rounded-xl p-8 max-w-sm w-full border border-slate-600 shadow-2xl">
+                        <h2 class="text-2xl font-bold mb-4">會員登入</h2>
+                        <input type="text" id="login-account" placeholder="電子郵件"
+                            class="w-full bg-slate-700 border border-slate-600 rounded px-4 py-2 mb-3 text-white">
+                        <div class="relative mb-6"><input type="password" id="login-password" placeholder="密碼"
+                                class="w-full bg-slate-700 border border-slate-600 rounded px-4 py-2 text-white pr-10"><span
+                                class="password-toggle" onclick="togglePassword('login-password')">👁️</span></div>
+                        <div class="flex gap-4"><button onclick="handleLogin()"
+                                class="flex-1 bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2 rounded transition">登入</button><button
+                                onclick="closeModal('login-modal')"
+                                class="flex-1 bg-slate-700 hover:bg-slate-600 text-white font-bold py-2 rounded transition">取消</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Become Seller Modal -->
+
+
+                <script>
+                    // API Configuration
+                    const API_BASE = 'http://localhost:5000/api';
+                    const IMG_BASE = 'http://localhost:5000'; // Static serve
+
+                    // State
+                    const MOCK_PRODUCTS = [
+                        { id: 1, title: '絕版經典原味襪', seller: 'Rock', description: '穿過的味道，只有你知道。', price: 500, image: './server/uploads/socks1.jpg', avatar: './server/uploads/seller_rock.jpg', bio: '專賣原味，童叟無欺', mode: 'auction', endTime: new Date().getTime() + 86400000 },
+                        { id: 2, title: '戰鬥用白襪', seller: 'Ricardo', description: '象徵自由', price: 1000, image: './server/uploads/socks1.jpg', avatar: './server/uploads/seller_ricardo_new.jpg', bio: '自由靈魂', mode: 'auction', endTime: new Date().getTime() + 7200000 },
+                        { id: 3, title: '頂級奢華黑絲襪', seller: 'Trump', description: '最佳材質', price: 5000, image: './server/uploads/socks_tights.png', avatar: './server/uploads/seller_trump.jpg', bio: 'Make Socks Great Again', mode: 'fixed' },
+                        { id: 4, title: '健身專用襪', seller: 'Rock', description: '健身必備', price: 250, image: './server/uploads/socks1.jpg', avatar: './server/uploads/seller_rock.jpg', bio: '專賣原味', mode: 'fixed' },
+                        { id: 5, title: 'Ugly Beauty 限定襪', seller: 'Jolin', description: '演唱會限定', price: 3000, image: './server/uploads/socks_demo_2.jpg', avatar: './server/uploads/seller_jolin.jpg', bio: '怪美的', mode: 'auction', endTime: new Date().getTime() + 36000000 },
+                        { id: 6, title: 'Neuralink 連接襪', seller: 'Elon', description: '雖不能上網但很酷', price: 800, image: './server/uploads/socks_demo_1.jpg', avatar: './server/uploads/seller_elon.jpg', bio: '火星殖民者', mode: 'fixed' },
+                    ];
+
+                    let products = [...MOCK_PRODUCTS];
+                    let currentUser = JSON.parse(localStorage.getItem('socks_user')) || null;
+                    let authToken = localStorage.getItem('socks_token') || null;
+                    let countdownInterval = null;
+
+                    // --- Initialization ---
+                    window.onload = async function () {
+                        if (currentUser) updateUI();
+                        await fetchAllProducts();
+
+                        // Auto navigate based on hash or default
+                        if (window.location.hash === '#seller') showPage('seller-upload');
+                        // Check Server Status (Optional)
+                        fetch(IMG_BASE).catch(() => console.error('Backend seems down. Please run start_servers.bat'));
+                    };
+
+                    // --- API Calls ---
+                    async function fetchAllProducts() {
+                        try {
+                            const res = await fetch(`${API_BASE}/products/public`);
+                            if (!res.ok) throw new Error('Fetch failed');
+                            const data = await res.json();
+                            products = data.map(p => ({
+                                ...p,
+                                id: p._id, // Map _id to id for compatibility
+                                // Ensure image is full path
+                                image: p.images && p.images.length > 0
+                                    ? (p.images[0].startsWith('http') ? p.images[0] : IMG_BASE + p.images[0])
+                                    : 'https://via.placeholder.com/300',
+                                // Map Seller name/avatar if populated, else use cache
+                                seller: p.sellerName || 'Unknown',
+                                avatar: p.sellerAvatar || 'https://api.dicebear.com/7.x/avataaars/svg?seed=Unknown',
+                                bio: 'Verified Seller'
+                            }));
+                            // Merge with mock products to ensure data visibility
+                            products = [...MOCK_PRODUCTS, ...products];
+
+                            // Render View based on current selection
+                            const activePage = document.querySelector('main:not(.hidden)').id;
+                            if (activePage === 'page-home') {
+                                // Check if a filter is already active (highlighted button)
+                                const activeBtn = document.querySelector('.filter-btn.bg-indigo-600');
+                                if (activeBtn) {
+                                    // Re-apply the active filter
+                                    if (activeBtn.innerText.includes('全部賣家')) filterContent('sellers');
+                                    else if (activeBtn.innerText.includes('熱門競標')) filterContent('auction');
+                                    else if (activeBtn.innerText.includes('直購專區')) filterContent('fixed');
+                                } else {
+                                    // Default
+                                    filterContent('sellers');
+                                }
+                            }
+                        } catch (err) {
+                            console.error("API Error - Filtering to Mock Data only:", err);
+                            // Fallback to MOCK
+                            // Fallback to MOCK
+                            products = MOCK_PRODUCTS;
+                            const activePage = document.querySelector('main:not(.hidden)').id;
+                            if (activePage === 'page-home') filterContent('sellers');
+                        }
+                    }
+
+                    async function fetchMyProducts() {
+                        if (!currentUser) return;
+                        try {
+                            const res = await fetch(`${API_BASE}/products/mine`, {
+                                headers: { 'x-user-id': currentUser._id || 'mock_id' } // Use ID for simple auth
+                            });
+                            const myProds = await res.json();
+                            renderMyProductsTable(myProds);
+                        } catch (err) {
+                            console.error(err);
+                        }
+                    }
+
+                    // --- Authentication ---
+                    // --- Authentication ---
+                    async function handleLogin() {
+                        const email = document.getElementById('login-account').value.trim();
+                        const password = document.getElementById('login-password').value; // Use real input
+
+                        if (!email) { alert('請輸入帳號'); return; }
+                        if (!password) { alert('請輸入密碼'); return; }
+
+                        try {
+                            const res = await fetch(`${API_BASE}/auth/login`, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ email, password })
+                            });
+
+                            const data = await res.json();
+                            if (!res.ok) throw new Error(data.msg || '登入失敗，請檢查帳號密碼');
+
+                            // PERSIST
+                            localStorage.setItem('socks_token', data.token);
+                            localStorage.setItem('socks_user', JSON.stringify(data.user));
+                            currentUser = data.user;
+                            authToken = data.token;
+
+                            closeModal('login-modal');
+                            updateUI();
+                            alert(`登入成功! 歡迎回來, ${currentUser.username}`);
+
+                            // Reload simple view if on My Products
+                            if (document.querySelector('main:not(.hidden)').id === 'page-seller-products') {
+                                showPage('seller-products');
+                            }
+
+                        } catch (err) {
+                            alert(err.message);
+                            console.error("Login Error:", err);
+                        }
+                    }
+
+                    function handleLogout() {
+                        localStorage.removeItem('socks_token');
+                        localStorage.removeItem('socks_user');
+                        currentUser = null;
+                        authToken = null;
+                        updateUI();
+                        showPage('home');
+                        alert('您已登出');
+                    }
+
+                    function mockLogout() {
+                        localStorage.removeItem('socks_token');
+                        localStorage.removeItem('socks_user');
+                        currentUser = null;
+                        authToken = null;
+                        updateUI();
+                        showPage('home');
+                    }
+
+                    // --- Seller Functions ---
+                    function setUploadMode(mode) {
+                        document.getElementById('up-mode').value = mode;
+                        document.getElementById('label-price').innerText = mode === 'fixed' ? '直購價格 (NT$)' : '起標價格 (NT$)';
+
+                        const btnFixed = document.getElementById('btn-mode-fixed');
+                        const btnAuc = document.getElementById('btn-mode-auction');
+                        const durField = document.getElementById('field-duration');
+
+                        if (mode === 'fixed') {
+                            btnFixed.classList.add('bg-indigo-600', 'text-white'); btnFixed.classList.remove('text-gray-400');
+                            btnAuc.classList.remove('bg-indigo-600', 'text-white'); btnAuc.classList.add('text-gray-400');
+                            durField.classList.add('hidden');
+                        } else {
+                            btnAuc.classList.add('bg-indigo-600', 'text-white'); btnAuc.classList.remove('text-gray-400');
+                            btnFixed.classList.remove('bg-indigo-600', 'text-white'); btnFixed.classList.add('text-gray-400');
+                            durField.classList.remove('hidden');
+                        }
+                    }
+
+                    function previewUpload(input) {
+                        if (input.files[0]) {
+                            const reader = new FileReader();
+                            reader.onload = (e) => {
+                                const img = document.getElementById('upload-preview');
+                                img.src = e.target.result;
+                                img.classList.remove('hidden');
+                                document.getElementById('upload-placeholder').classList.add('hidden');
+                            };
+                            reader.readAsDataURL(input.files[0]);
+                        }
+                    }
+
+                    async function submitProduct() {
+                        if (!currentUser) return alert('請先登入');
+
+                        const fileInput = document.getElementById('upload-photo');
+                        const title = document.getElementById('up-title').value;
+                        const price = document.getElementById('up-price').value;
+                        const mode = document.getElementById('up-mode').value;
+                        const desc = document.getElementById('up-desc').value;
+                        const duration = document.getElementById('up-duration').value;
+
+                        if (!title || !price || !fileInput.files[0]) return alert('請填寫完整資訊並上傳圖片');
+
+                        const formData = new FormData();
+                        formData.append('photos', fileInput.files[0]);
+                        formData.append('title', title);
+                        formData.append('price', price);
+                        formData.append('mode', mode);
+                        formData.append('description', desc);
+                        formData.append('sellerId', currentUser._id); // Send ID
+                        formData.append('sellerName', currentUser.username);
+                        formData.append('sellerAvatar', currentUser.avatar);
+                        if (mode === 'auction') formData.append('duration', duration);
+
+                        try {
+                            const res = await fetch(`${API_BASE}/products`, {
+                                method: 'POST',
+                                body: formData // No Content-Type header needed for FormData
+                            });
+                            if (!res.ok) throw new Error('Upload Failed');
+
+                            alert('商品上架成功！');
+                            // Reset
+                            document.getElementById('up-title').value = '';
+                            document.getElementById('upload-preview').classList.add('hidden');
+                            document.getElementById('upload-placeholder').classList.remove('hidden');
+
+                            // Go to Dashboard
+                            showPage('seller-products');
+                        } catch (e) {
+                            alert('上架失敗: ' + e.message);
+                        }
+                    }
+
+                    function renderMyProductsTable(list) {
+                        const tbody = document.getElementById('my-products-list');
+                        const zeroMsg = document.getElementById('no-products-msg');
+                        document.getElementById('my-prod-count').innerText = list.length;
+
+                        tbody.innerHTML = '';
+                        if (list.length === 0) {
+                            zeroMsg.classList.remove('hidden');
+                            return;
+                        }
+                        zeroMsg.classList.add('hidden');
+
+                        list.forEach(p => {
+                            const imgUrl = p.images[0].startsWith('http') ? p.images[0] : IMG_BASE + p.images[0];
+                            const row = `
+                    <tr class="hover:bg-slate-800 transition">
+                        <td class="p-4"><img src="${imgUrl}" class="w-16 h-16 object-cover rounded border border-slate-600"></td>
+                        <td class="p-4 font-bold text-white">${p.title}</td>
+                        <td class="p-4 font-mono text-indigo-400">NT$ ${p.price.toLocaleString()}</td>
+                        <td class="p-4"><span class="bg-emerald-900 text-emerald-300 px-2 py-1 rounded text-xs">銷售中</span></td>
+                        <td class="p-4 text-xs text-gray-400 uppercase">${p.mode}</td>
+                        <td class="p-4 text-right">
+                            <button class="text-red-400 hover:text-red-300 text-sm font-bold">下架</button>
+                        </td>
+                    </tr>
+                `;
+                            tbody.innerHTML += row;
+                        });
+                    }
+
+                    // --- Core UI Logic ---
+                    function showPage(pageId) {
+                        document.querySelectorAll('main').forEach(el => el.classList.add('hidden'));
+                        document.getElementById('page-' + pageId).classList.remove('hidden');
+                        window.scrollTo(0, 0);
+
+                        if (pageId === 'home') {
+                            fetchAllProducts(); // Refresh
+                        }
+                        if (pageId === 'seller-products') {
+                            fetchMyProducts();
+                        }
+                    }
+
+                    function toggleUserDropdown() {
+                        const d = document.getElementById('user-dropdown');
+                        if (d.classList.contains('hidden')) d.classList.remove('hidden');
+                        else d.classList.add('hidden');
+                    }
+
+                    function updateUI() {
+                        if (currentUser) {
+                            document.getElementById('auth-buttons').classList.add('hidden');
+                            document.getElementById('user-profile').classList.remove('hidden');
+                            // document.getElementById('user-profile').classList.add('flex'); // Removed to support dropdown layout
+                            document.getElementById('nav-avatar').src = currentUser.avatar;
+                            document.getElementById('nav-username').innerText = currentUser.username;
+                        } else {
+                            document.getElementById('auth-buttons').classList.remove('hidden');
+                            document.getElementById('user-profile').classList.add('hidden');
+                        }
+                    }
+
+                    // --- Helper/Legacy Wrappers ---
+                    function filterContent(mode, event) {
+                        if (event) highlightButton(event.target);
+
+                        if (mode === 'sellers') renderSellers(products);
+                        else renderProducts(products, mode);
+                    }
+
+                    function highlightButton(btn) {
+                        document.querySelectorAll('.filter-btn').forEach(b => {
+                            b.classList.remove('bg-indigo-600', 'text-white', 'shadow-lg');
+                            b.classList.add('bg-slate-700', 'text-gray-300');
+                        });
+                        if (btn) {
+                            btn.classList.remove('bg-slate-700', 'text-gray-300');
+                            btn.classList.add('bg-indigo-600', 'text-white', 'shadow-lg');
+                        }
+                    }
+
+                    function renderSellers(list) {
+                        const grid = document.getElementById('main-content-grid');
+                        grid.innerHTML = '';
+                        grid.classList.remove('lg:grid-cols-3'); grid.classList.add('lg:grid-cols-4');
+
+                        const sellerMap = new Map();
+                        list.forEach(p => {
+                            if (!sellerMap.has(p.seller)) sellerMap.set(p.seller, { name: p.seller, avatar: p.avatar, bio: p.bio, productCount: 0 });
+                            sellerMap.get(p.seller).productCount++;
+                        });
+
+                        sellerMap.forEach(s => {
+                            grid.innerHTML += `
+                    <div class="bg-slate-800 rounded-xl overflow-hidden shadow-2xl hover:scale-[1.05] transition duration-300 border border-slate-700 group cursor-pointer" onclick="showSellerProfile('${s.name}')">
+                        <div class="h-32 bg-gradient-to-r from-indigo-900 to-slate-900 relative">
+                             <img src="${s.avatar}" class="w-24 h-24 rounded-full border-4 border-slate-800 absolute -bottom-12 left-1/2 transform -translate-x-1/2 object-cover">
+                        </div>
+                        <div class="pt-14 pb-6 px-4 text-center">
+                            <h3 class="text-xl font-bold text-white mb-1">${s.name}</h3>
+                            <p class="text-xs text-gray-400 mb-3">${s.bio}</p>
+                            <span class="bg-indigo-600 text-white text-xs px-2 py-1 rounded-full">商品數量: ${s.productCount}</span>
+                        </div>
+                    </div>`;
+                        });
+                    }
+
+                    function renderProducts(list, filterMode) {
+                        const grid = document.getElementById('main-content-grid');
+                        grid.innerHTML = '';
+                        grid.classList.remove('lg:grid-cols-4'); grid.classList.add('lg:grid-cols-3');
+
+                        const filtered = list.filter(p => p.mode === filterMode);
+                        filtered.forEach(p => {
+                            const isAuction = p.mode === 'auction';
+                            const badgeColor = isAuction ? 'bg-amber-500 text-black' : 'bg-emerald-500 text-white';
+                            const badgeText = isAuction ? '競標中' : '直購';
+                            const priceColor = isAuction ? 'text-indigo-400' : 'text-emerald-400';
+                            const btnColor = isAuction ? 'bg-indigo-600 hover:bg-indigo-500' : 'bg-emerald-600 hover:bg-emerald-500';
+                            const btnText = isAuction ? '查看詳情' : '立即購買';
+
+                            grid.innerHTML += `
+                    <div class="product-item bg-slate-800 rounded-xl overflow-hidden shadow-2xl hover:scale-[1.02] transition duration-300 border border-slate-700 group" onclick="showProductDetail('${p.id}')">
+                        <div class="relative overflow-hidden cursor-pointer">
+                            <img src="${p.image}" class="w-full h-64 object-cover transform group-hover:scale-110 transition duration-500">
+                            <div class="absolute top-2 right-2 ${badgeColor} font-bold px-3 py-1 rounded-full text-xs shadow-md">${badgeText}</div>
+                        </div>
+                        <div class="p-5">
+                            <div class="flex items-center gap-2 mb-3 cursor-pointer hover:bg-slate-700/50 p-1 -ml-1 rounded transition" onclick="event.stopPropagation(); showSellerProfile('${p.seller}')">
+                                <img src="${p.avatar}" class="w-8 h-8 rounded-full object-cover border border-indigo-400">
+                                <div><p class="text-sm font-bold text-white">${p.seller}</p><p class="text-xs text-gray-400">${p.bio}</p></div>
+                            </div>
+                            <h3 class="text-xl font-bold mb-2">${p.title}</h3>
+                            <div class="flex justify-between items-end border-t border-slate-700 pt-4">
+                                <div><p class="text-xs text-gray-500 mb-1">${isAuction ? '目前出價' : '直購價'}</p><p class="product-price text-2xl font-bold ${priceColor}">NT$ ${p.price.toLocaleString()}</p></div>
+                                <button class="${btnColor} text-white px-4 py-2 rounded-lg font-medium transition">${btnText}</button>
+                            </div>
+                        </div>
+                    </div>`;
+                        });
+                    }
+
+                    function showProductDetail(id) { // NOTE: ID is string now
+                        // Logic for modal...
+                        currentProductId = id;
+                        const p = products.find(i => i.id == id); // Loose equality for safety
+                        if (!p) return;
+                        // Populate Modal (Previous logic reused, ensuring DOM IDs match)
+                        document.getElementById('modal-title').innerText = p.title;
+                        document.getElementById('modal-price').innerText = 'NT$ ' + p.price.toLocaleString();
+                        document.getElementById('modal-seller').innerText = p.seller;
+                        document.getElementById('modal-bio').innerText = p.bio;
+                        document.getElementById('modal-desc').innerText = p.description;
+                        document.getElementById('modal-image').src = p.image;
+                        document.getElementById('modal-avatar').src = p.avatar;
+
+                        // Auction Logic...
+                        const auctionUI = document.getElementById('modal-auction-ui');
+                        const buyUI = document.getElementById('modal-buy-ui');
+
+                        if (p.mode === 'auction') {
+                            auctionUI.classList.remove('hidden');
+                            buyUI.classList.add('hidden');
+                            // Timer Logic needs p.endTime
+                            startCountdown(p.endTime);
+                        } else {
+                            auctionUI.classList.add('hidden');
+                            buyUI.classList.remove('hidden');
+                            if (countdownInterval) clearInterval(countdownInterval);
+                        }
+                        document.getElementById('product-modal').classList.remove('hidden');
+                    }
+
+                    function closeModal(id) {
+                        document.getElementById(id).classList.add('hidden');
+                        if (id === 'product-modal' && countdownInterval) clearInterval(countdownInterval);
+                        // Hide dropdown if open
+                        const dropdown = document.getElementById('user-dropdown');
+                        if (dropdown && !dropdown.classList.contains('hidden')) {
+                            dropdown.classList.add('hidden');
+                        }
+                    }
+                    function showRegisterModal() { document.getElementById('register-modal').classList.remove('hidden'); }
+                    function showLoginModal() { document.getElementById('login-modal').classList.remove('hidden'); }
+                    function openUserSettings() {
+                        if (!currentUser) return;
+                        document.getElementById('settings-username-input').value = currentUser.username;
+                        document.getElementById('settings-avatar').src = currentUser.avatar;
+                        document.getElementById('settings-phone').value = currentUser.phone || '';
+                        document.getElementById('settings-dob').value = currentUser.dob || '';
+                        document.getElementById('cc-number').value = currentUser.ccNumber || '';
+                        document.getElementById('cc-expiry').value = currentUser.ccExpiry || '';
+                        document.getElementById('cc-cvc').value = currentUser.ccCvc || '';
+                        document.getElementById('settings-modal').classList.remove('hidden');
+                    }
+
+                    function handleAvatarChange(input) {
+                        if (input.files && input.files[0]) {
+                            const reader = new FileReader();
+                            reader.onload = function (e) { document.getElementById('settings-avatar').src = e.target.result; }
+                            reader.readAsDataURL(input.files[0]);
+                        }
+                    }
+                    function saveUserSettings() {
+                        currentUser.username = document.getElementById('settings-username-input').value;
+                        currentUser.phone = document.getElementById('settings-phone').value;
+                        currentUser.dob = document.getElementById('settings-dob').value;
+                        currentUser.avatar = document.getElementById('settings-avatar').src;
+                        currentUser.ccNumber = document.getElementById('cc-number').value;
+                        currentUser.ccExpiry = document.getElementById('cc-expiry').value;
+                        currentUser.ccCvc = document.getElementById('cc-cvc').value;
+
+                        // Save to LocalStorage
+                        localStorage.setItem('socks_user', JSON.stringify(currentUser));
+
+                        updateUI();
+                        closeModal('settings-modal');
+                        alert('個人資料已更新！');
+                    }
+
+                    function togglePassword(fieldId) {
+                        const input = document.getElementById(fieldId);
+                        input.type = input.type === 'password' ? 'text' : 'password';
+                    }
+                    function validateEmail(email) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email); }
+                    function validatePassword(pwd) {
+                        if (pwd.length <= 6) return false;
+                        if (!/[A-Z]/.test(pwd)) return false;
+                        if (!/[a-z]/.test(pwd)) return false;
+                        const digits = pwd.match(/\d/g);
+                        if (!digits || digits.length < 3) return false;
+                        return true;
+                    }
+                    async function handleRegister() {
+                        const email = document.getElementById('reg-email').value.trim();
+                        const username = document.getElementById('reg-username').value.trim();
+                        const pwd = document.getElementById('reg-password').value;
+
+                        if (!username) { alert('註冊失敗：請輸入使用者名稱'); return; }
+                        if (!email || !validateEmail(email)) { alert('註冊失敗：Email 格式錯誤'); return; }
+                        if (!validatePassword(pwd)) { alert('註冊失敗：密碼格式不符 (需大寫+小寫+3數字，長度>6)'); return; }
+
+                        try {
+                            const res = await fetch(`${API_BASE}/auth/register`, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ email, username, password: pwd })
+                            });
+
+                            const data = await res.json();
+                            if (!res.ok) throw new Error(data.message || '註冊失敗'); // data.message from backend validator
+
+                            // Auto-login after registration
+                            localStorage.setItem('socks_token', data.token);
+                            localStorage.setItem('socks_user', JSON.stringify(data.user));
+                            currentUser = data.user;
+                            authToken = data.token;
+
+                            closeModal('register-modal');
+                            updateUI();
+                            alert('註冊成功！系統已自動為您登入。');
+
+                        } catch (err) {
+                            alert('註冊錯誤: ' + err.message);
+                        }
+                    }
+
+                    function showSellerProfileFromValues() {
+                        const sellerName = document.getElementById('modal-seller').innerText;
+                        if (sellerName) showSellerProfile(sellerName);
+                    }
+
+                    function showSellerProfile(name) {
+                        closeModal('product-modal'); // If coming from product modal
+                        const sellerItems = products.filter(p => p.seller === name);
+                        if (sellerItems.length === 0) return;
+
+                        const sellerInfo = sellerItems[0]; // Get generic info from first item
+                        document.getElementById('seller-view-name').innerText = sellerInfo.seller;
+                        document.getElementById('seller-view-bio').innerText = sellerInfo.bio;
+                        document.getElementById('seller-view-avatar').src = sellerInfo.avatar;
+
+                        const grid = document.getElementById('seller-products-grid');
+                        grid.innerHTML = '';
+                        sellerItems.forEach(p => {
+                            grid.innerHTML += `
+                    <div class="bg-gray-800 rounded-lg overflow-hidden border border-gray-700 cursor-pointer hover:scale-105 transition" onclick="closeModal('seller-profile-modal'); showProductDetail('${p.id}')">
+                        <img src="${p.image}" class="w-full h-40 object-cover">
+                        <div class="p-3">
+                            <h4 class="font-bold text-white truncate">${p.title}</h4>
+                            <p class="text-indigo-400 font-bold mt-1">NT$ ${p.price.toLocaleString()}</p>
+                        </div>
+                    </div>
+                 `;
+                        });
+
+                        document.getElementById('seller-profile-modal').classList.remove('hidden');
+                    }
+
+                    function startCountdown(endTime) {
+                        if (countdownInterval) clearInterval(countdownInterval);
+                        function update() {
+                            const now = new Date().getTime();
+                            const distance = endTime - now;
+                            const timerElement = document.getElementById('countdown-timer');
+                            if (!timerElement) return;
+                            if (distance < 0) {
+                                clearInterval(countdownInterval);
+                                timerElement.innerText = "競標已結束";
+                                timerElement.classList.add('text-red-500');
+                                document.getElementById('bid-btn').disabled = true;
+                                document.getElementById('bid-btn').classList.add('opacity-50', 'cursor-not-allowed');
+                                return;
+                            }
+                            const btn = document.getElementById('bid-btn');
+                            if (btn) { btn.disabled = false; btn.classList.remove('opacity-50', 'cursor-not-allowed'); }
+
+                            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                            timerElement.innerText = `${hours < 10 ? '0' + hours : hours}時 ${minutes < 10 ? '0' + minutes : minutes}分 ${seconds < 10 ? '0' + seconds : seconds} 秒`;
+                            timerElement.classList.remove('text-red-500');
+                        }
+                        update();
+                        countdownInterval = setInterval(update, 1000);
+                    }
+
+                    function simulateBid() {
+                        if (!currentUser) {
+                            alert('請先登入或註冊會員後才能進行競標！');
+                            showLoginModal();
+                            return;
+                        }
+                        const val = parseInt(document.getElementById('bid-input').value);
+                        const p = products.find(i => i.id === currentProductId);
+                        if (p.endTime && new Date().getTime() > p.endTime) { alert('競標已結束'); return; }
+                        if (!val || val <= p.price) { alert('出價需高於目前價格'); return; }
+                        p.price = val;
+                        document.getElementById('modal-price').innerText = 'NT$ ' + val.toLocaleString();
+                        renderProducts(products); // Re-render grid to show new price
+                        alert('出價成功！');
+                        document.getElementById('bid-input').value = '';
+                    }
+
+
+
+                    function updateUI() {
+                        if (currentUser) {
+                            document.getElementById('auth-buttons').classList.add('hidden');
+                            document.getElementById('user-profile').classList.remove('hidden');
+                            document.getElementById('nav-avatar').src = currentUser.avatar;
+                            document.getElementById('nav-username').innerText = currentUser.username;
+                        } else {
+                            document.getElementById('auth-buttons').classList.remove('hidden');
+                            document.getElementById('user-profile').classList.add('hidden');
+                        }
+                    }
+
+                    function simulateBuy() {
+                        if (!currentUser) {
+                            alert('請先登入或註冊會員後才能購買！');
+                            showLoginModal();
+                            return;
+                        }
+                        if (confirm('確定購買？')) { alert('購買成功！'); closeModal('product-modal'); }
+                    }
+                </script>
+</body>
+
+</html>

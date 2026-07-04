@@ -1,0 +1,333 @@
+/* ==================== 天氣顯示區塊 ==================== */
+.weather-display-section {
+    padding: 3rem 0;
+    min-height: 60vh;
+}
+
+.weather-card {
+    background: white;
+    border-radius: 20px;
+    padding: 2.5rem;
+    box-shadow: var(--shadow-lg);
+    transition: var(--transition);
+    animation: slideIn 0.5s ease;
+}
+
+.weather-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="dark"] .weather-card {
+    background: var(--card-bg);
+    color: var(--text-color);
+    box-shadow: 0 10px 20px var(--card-shadow);
+}
+
+/* 天氣主要資訊 */
+.weather-main {
+    text-align: center;
+}
+
+.city-name {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--dark-color);
+    margin-bottom: 1.5rem;
+}
+
+[data-theme="dark"] .city-name {
+    color: var(--text-color);
+}
+
+.weather-icon-container {
+    margin: 1rem 0;
+}
+
+.weather-icon {
+    width: 150px;
+    height: 150px;
+    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+    animation: float 3s ease-in-out infinite;
+}
+
+.temperature-display {
+    font-size: 4rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin: 1rem 0;
+}
+
+.temperature-display .unit {
+    font-size: 2rem;
+    opacity: 0.7;
+}
+
+.weather-description {
+    font-size: 1.5rem;
+    color: #7f8c8d;
+    text-transform: capitalize;
+    font-weight: 500;
+}
+
+[data-theme="dark"] .weather-description {
+    color: var(--text-secondary);
+}
+
+[data-theme="dark"] .temperature-display {
+    color: var(--primary-color);
+}
+
+/* 天氣詳細資訊 */
+.weather-details {
+    padding: 1rem;
+}
+
+.details-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    color: var(--dark-color);
+    border-bottom: 3px solid var(--primary-color);
+    padding-bottom: 0.5rem;
+}
+
+[data-theme="dark"] .details-title {
+    color: var(--text-color);
+    border-bottom-color: var(--primary-color);
+}
+
+.detail-item {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #ecf0f1;
+    transition: var(--transition);
+}
+
+.detail-item:hover {
+    background: #f8f9fa;
+    padding-left: 0.5rem;
+    border-radius: 8px;
+}
+
+[data-theme="dark"] .detail-item {
+    border-bottom-color: var(--border-color);
+}
+
+[data-theme="dark"] .detail-item:hover {
+    background: rgba(91, 163, 245, 0.1);
+}
+
+.detail-item i {
+    font-size: 1.5rem;
+    width: 40px;
+    color: var(--primary-color);
+}
+
+.detail-label {
+    font-weight: 600;
+    margin-right: 0.5rem;
+    color: var(--dark-color);
+}
+
+.detail-value {
+    margin-left: auto;
+    font-weight: 500;
+    color: #555;
+}
+
+[data-theme="dark"] .detail-label,
+[data-theme="dark"] .detail-value {
+    color: var(--text-color);
+}
+
+[data-theme="dark"] .detail-item i {
+    color: var(--primary-color);
+}
+
+/* 功能控制列 */
+.weather-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #ecf0f1;
+}
+
+[data-theme="dark"] .weather-controls {
+    border-bottom-color: var(--border-color);
+}
+
+.unit-toggle {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.unit-toggle .btn {
+    min-width: 50px;
+    transition: all 0.3s ease;
+}
+
+.unit-toggle .btn.active {
+    background: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+[data-theme="dark"] .unit-toggle .btn {
+    color: var(--text-color);
+    border-color: var(--input-border);
+}
+
+[data-theme="dark"] .unit-toggle .btn.active {
+    background: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+[data-theme="dark"] .btn-outline-warning,
+[data-theme="dark"] .btn-outline-info {
+    color: var(--text-color);
+    border-color: var(--input-border);
+}
+
+[data-theme="dark"] .btn-outline-warning:hover {
+    background: #ffc107;
+    color: #000;
+}
+
+[data-theme="dark"] .btn-outline-info:hover {
+    background: #17a2b8;
+    color: white;
+}
+
+[data-theme="dark"] #favoriteBtn.favorited {
+    color: #ffc107;
+    border-color: #ffc107;
+}
+
+/* 資訊卡片 */
+.info-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: var(--shadow-md);
+    transition: var(--transition);
+    animation: fadeIn 0.5s ease;
+}
+
+.info-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+}
+
+[data-theme="dark"] .info-card {
+    background: var(--card-bg);
+    color: var(--text-color);
+    box-shadow: 0 10px 20px var(--card-shadow);
+}
+
+.info-icon {
+    font-size: 3rem;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+.info-card h4 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--dark-color);
+}
+
+.info-card p {
+    font-size: 1.1rem;
+    color: #555;
+    margin: 0;
+}
+
+[data-theme="dark"] .info-card h4 {
+    color: var(--text-color);
+}
+
+[data-theme="dark"] .info-card p {
+    color: var(--text-secondary);
+}
+
+[data-theme="dark"] .info-icon {
+    color: var(--primary-color);
+}
+
+/* ==================== Google 地圖 ==================== */
+.map-container {
+    background: white;
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+    margin: 2rem 0;
+    animation: slideIn 0.5s ease;
+}
+
+[data-theme="dark"] .map-container {
+    background: var(--card-bg);
+    color: var(--text-color);
+    box-shadow: 0 10px 20px var(--card-shadow);
+}
+
+.map-title {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: var(--dark-color);
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 3px solid var(--primary-color);
+}
+
+[data-theme="dark"] .map-title {
+    color: var(--text-color);
+    border-bottom-color: var(--primary-color);
+}
+
+.map-title i {
+    color: var(--primary-color);
+    margin-right: 0.5rem;
+}
+
+.map-wrapper {
+    position: relative;
+    width: 100%;
+    height: 450px;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="dark"] .map-wrapper {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+}
+
+.map-wrapper iframe {
+    border-radius: 15px;
+}
+
+#locate-btn {
+  margin: 1rem 0;
+  font-size: 1rem;
+  padding: 0.6rem 1.2rem;
+}
+
+#forecastChartContainer {
+    width: 100%;
+    max-width: 90vw;     /* 使用視窗寬度的90%，電腦螢幕會放大 */
+    margin: 0 auto;
+    min-width: 100px;    /* 下限避免太窄 */
+}
+
+#forecastChart {
+    width: 100% !important;
+    height: 180px;
+    display: block;
+}
